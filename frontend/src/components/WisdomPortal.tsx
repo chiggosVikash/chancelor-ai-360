@@ -11,17 +11,20 @@ import {
   User,
   Quote,
   Loader2,
-  CheckCircle2
+  CheckCircle2,
+  Mic,
+  MicOff
 } from "lucide-react";
 import { ChatResponse, askChancellorAI } from "../lib/api";
-import { useSpeechSynthesis } from "../hooks/useSpeech";
+import { useSpeechSynthesis, useSpeechRecognition } from "../hooks/useSpeech";
 import { cn } from "@/lib/cn";
 
 const PRESET_QUERIES = [
   "What inspired the founding of NICE in 1989?",
-  "What is your philosophy on modern higher education?",
-  "How can youth balance technology with ethical values?",
-  "What is the significance of the Gangoh rural campus?"
+  "Tell me about your Gandhian philosophy and social work",
+  "How does the 200-bed Ayurvedic hospital serve Western UP?",
+  "What is the collection 'Quotes I Quote'?",
+  "What are your thoughts on higher education and NEP 2020?"
 ];
 
 interface WisdomPortalProps {
@@ -40,17 +43,34 @@ export const WisdomPortal: React.FC<WisdomPortalProps> = ({
     answer: "Welcome to this interactive tribute. Throughout the last 35 years, our core pursuit has been singular: to ensure that knowledge is not a privilege confined to metropolitan hubs, but an empowering catalyst available to every eager mind in our villages and towns. In an age of artificial intelligence and swift technological shifts, our grounding must remain deep in values, compassion, and nation-building.",
     citations: [
       "Shobhit University Convocation Address",
-      "NICE Society Archival Registry • Vol. 1"
+      "NICE Society Archival Registry • Vol. 1",
+      "Gandhi Smriti Event Archives"
     ],
     suggested_followups: [
       "What inspired the founding of NICE in 1989?",
-      "What is your philosophy on modern higher education?",
-      "How can youth balance technology with ethical values?"
+      "Tell me about the 200-bed Ayurvedic hospital in Gangoh",
+      "What is the collection 'Quotes I Quote'?"
     ]
   });
 
   const { speak, stop: stopSpeaking, isSpeaking, isEnabled: isVoiceActive, toggleVoice } = useSpeechSynthesis();
   const responseEndRef = useRef<HTMLDivElement>(null);
+
+  // Speech Recognition (Microphone Voice Input)
+  const { isListening, transcript, startListening, stopListening, isSupported: isMicSupported } = useSpeechRecognition(
+    (finalText) => {
+      if (finalText.trim()) {
+        setInputText(finalText);
+        handleSendQuestion(finalText);
+      }
+    }
+  );
+
+  useEffect(() => {
+    if (transcript) {
+      setInputText(transcript);
+    }
+  }, [transcript]);
 
   useEffect(() => {
     if (initialQuery) {
@@ -62,6 +82,7 @@ export const WisdomPortal: React.FC<WisdomPortalProps> = ({
     const q = queryText.trim();
     if (!q) return;
 
+    if (isListening) stopListening();
     setIsLoading(true);
     setLastQuery(q);
     setInputText("");
@@ -75,7 +96,7 @@ export const WisdomPortal: React.FC<WisdomPortalProps> = ({
     } catch (err) {
       console.warn("Using contextual tribute fallback:", err);
       const fallback: ChatResponse = {
-        answer: "Hon'ble Chancellor Kunwar Shekhar Vijendra has dedicated over three decades to democratizing higher education and rural transformation in India. His guiding vision remains: 'Education must not merely prepare students for a living; it must prepare them for life, grounding them in ethics, compassion, and innovation.'",
+        answer: "Hon'ble Chancellor Kunwar Shekhar Vijendra has dedicated over three decades to democratizing higher education, Gandhian values, and rural transformation in India. His guiding vision remains: 'Education must not merely prepare students for a living; it must prepare them for life, grounding them in ethics, compassion, and innovation.'",
         citations: ["Shobhit University Official Registry • Archive Record 01"],
         suggested_followups: [
           "Tell me about the university's research focus",
@@ -108,7 +129,7 @@ export const WisdomPortal: React.FC<WisdomPortalProps> = ({
             Talk to Chancellor AI
           </h2>
           <p className="text-sm text-[#8B7B6F] font-ui leading-relaxed">
-            Inquire about his educational philosophy, 35-year journey from NICE 1989, or perspective on global academic diplomacy.
+            Inquire hands-free or type questions about his 35-year journey from NICE 1989, Gandhian philosophy, rural healthcare, or educational vision.
           </p>
         </div>
 
@@ -126,7 +147,7 @@ export const WisdomPortal: React.FC<WisdomPortalProps> = ({
                 </h3>
                 <span className="text-xs text-[#8B7B6F] font-ui flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
-                  Grounded in Shobhit University Knowledge Base
+                  Powered by OpenRouter &amp; Shobhit Knowledge Base
                 </span>
               </div>
             </div>
@@ -264,7 +285,7 @@ export const WisdomPortal: React.FC<WisdomPortalProps> = ({
             ))}
           </div>
 
-          {/* Input Bar */}
+          {/* Input Bar with Mic Input & Send */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -272,14 +293,41 @@ export const WisdomPortal: React.FC<WisdomPortalProps> = ({
             }}
             className="p-4 sm:p-5 bg-white border-t border-[rgba(26,22,20,0.08)] flex items-center space-x-3"
           >
+            {/* Microphone Voice Input Toggle */}
+            <button
+              type="button"
+              onClick={() => {
+                if (isListening) {
+                  stopListening();
+                } else {
+                  startListening();
+                }
+              }}
+              className={cn(
+                "p-3 rounded-xl border transition-all flex items-center justify-center flex-shrink-0",
+                isListening
+                  ? "bg-rose-500 text-white border-rose-600 animate-pulse shadow-md shadow-rose-500/20"
+                  : "bg-[#FAF8F4] text-[#4A3F35] border-[rgba(26,22,20,0.08)] hover:bg-[#FDF5E4] hover:text-[#B8862C]"
+              )}
+              title={isListening ? "Listening... (Click to stop)" : "Speak via Microphone (Hands-free)"}
+            >
+              {isListening ? <Mic className="w-5 h-5 animate-bounce" /> : <Mic className="w-5 h-5" />}
+            </button>
+
             <input
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Ask Hon'ble Chancellor AI anything about his journey, vision, or advice..."
+              placeholder={isListening ? "Listening to your voice on stage..." : "Ask Hon'ble Chancellor AI anything about his journey, vision, or advice..."}
               disabled={isLoading}
-              className="flex-1 bg-[#FAF8F4] text-[#1A1614] placeholder-[#8B7B6F] text-sm font-ui px-4 py-3 rounded-xl border border-[rgba(26,22,20,0.08)] focus:outline-none focus:border-[#B8862C] focus:ring-2 focus:ring-[#B8862C]/15 transition-all"
+              className={cn(
+                "flex-1 text-sm font-ui px-4 py-3 rounded-xl border transition-all",
+                isListening
+                  ? "bg-rose-50/50 border-rose-300 text-rose-950 placeholder-rose-400"
+                  : "bg-[#FAF8F4] text-[#1A1614] placeholder-[#8B7B6F] border-[rgba(26,22,20,0.08)] focus:outline-none focus:border-[#B8862C] focus:ring-2 focus:ring-[#B8862C]/15"
+              )}
             />
+
             <button
               type="submit"
               disabled={isLoading || !inputText.trim()}

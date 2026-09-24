@@ -1,112 +1,160 @@
 {
   "name": "Kunwar Shekhar Vijendra",
   "title": "Co-Founder & Hon'ble Chancellor, Shobhit University",
+  "origin": "Gangoh, Saharanpur District, Uttar Pradesh",
+  "office_location": "Shobhit University Tower, Mayur Vihar Phase II, Delhi",
+  "persona_summary": "Educationist, Philanthropist, Passionate Gandhian, Social Speaker, Academic Influencer, Occasional Poet, and a Dreamer.",
   "institutions": [
     "Shobhit Institute of Engineering & Technology (Deemed to-be-University, Meerut)",
     "Shobhit University, Gangoh (Saharanpur, UP)",
-    "NICE Society (Est. 1989)",
-    "Shobhit Ayurvedic Medical College & Hospital"
+    "National Institute of Computer Education (NICE) Society Trust (Est. 1989)",
+    "KSV Ayurved Medical College, Hospital and Research Centre",
+    "Centre for Naturopathy and Yogic Sciences"
   ],
-  "biography": "Kunwar Shekhar Vijendra is a distinguished Indian educationist, philanthropist, and social reformer. As the Chancellor of Shobhit University and Chairman of NICE Society, he has dedicated over three decades to transforming higher education in India. Born with a deep commitment to societal development, he championed the democratization of technical, biological, and medical education in rural and semi-urban India, creating world-class opportunities for thousands of first-generation learners.",
+  "biography": "Kunwar Shekhar Vijendra is an eminent Indian educational leader, social entrepreneur, and passionate Gandhian who hails from Gangoh in Saharanpur district, Western Uttar Pradesh. Over three-and-a-half decades, he has dedicated himself to empowering rural youth through education, skill development, and affordable healthcare. Beginning his journey as a full-time volunteer and promoter member with the NICE Society Trust in 1989, he co-founded Shobhit Deemed University in Meerut and Shobhit University in Gangoh, along with a 200-bed Ayurvedic research hospital and yoga-naturopathy center in rural Western UP. He serves as Chairman of the ASSOCHAM National Council on Education and Patron of CEGR, actively championing value-based learning, inclusive education, and nation-building.",
   "core_pillars": [
     {
-      "title": "Empowering Nation Through Education",
-      "description": "Firm belief that accessible, value-based education is the primary driver of national prosperity and individual empowerment."
+      "title": "Empowering Rural Youth Through Education & Skills",
+      "description": "Unwavering commitment to bringing world-class technical, legal, agricultural, and biological education directly to rural and semi-urban doorsteps."
     },
     {
-      "title": "Convergence of Ancient Wisdom & Modern Technology",
-      "description": "Pioneering the synergy between traditional Indian sciences (Ayurveda, Naturopathy, Yogic sciences) and cutting-edge technologies (Biotechnology, Artificial Intelligence, Agricultural Informatics)."
+      "title": "Ancient Indian Wisdom & Integrative Health",
+      "description": "Pioneering the synthesis of Ayurveda, Yoga, and Naturopathy with modern medical science; operating a 200-bed charitable Ayurvedic research hospital in rural UP."
     },
     {
-      "title": "Rural Youth Empowerment & Affordable Healthcare",
-      "description": "Establishing premier institutions and a 100-bed charitable Ayurvedic research hospital in rural Western UP to serve underprivileged communities."
+      "title": "Gandhian Ethics & Universal Harmony",
+      "description": "Steadfast devotion to truth, non-violence, and social equity; actively serving on the Central Board & Executive Committee of Harijan Sevak Sangh and promoting interfaith dialogue."
     },
     {
-      "title": "Global Goodwill & Academic Diplomacy",
-      "description": "Fostering international academic collaborations, youth forums with UN/UNESCO, and representing Indian higher education globally."
+      "title": "Academic Diplomacy & Global Goodwill",
+      "description": "Representing Indian higher education across global summits in the USA, UK, Germany, Australia, Russia, China, UAE, and African nations, advocating for youth leadership and cultural diplomacy."
+    },
+    {
+      "title": "Inclusive Sports & Divyang Welfare",
+      "description": "Fostering youth fitness and inclusive sports as Chairman of the U.P. Body Building & Fitness Association, spearheading Divyang (specially-abled) championships."
     }
   ],
   "leadership_roles": [
-    "Co-Founder & Chancellor, Shobhit University (Meerut & Gangoh)",
-    "Chairman, National Institute of Computer Education (NICE) Society",
+    "Co-Founder & Chancellor, Shobhit Deemed University (Meerut)",
+    "Co-Founder & Chancellor, Shobhit University (Gangoh, Saharanpur)",
+    "Promoter Member & Chairman, NICE Society Trust (since 1989)",
     "Chairman, ASSOCHAM National Council on Education",
-    "Advisor & Patron to numerous educational trusts and social welfare bodies in India and abroad"
+    "Patron & Former Sr. Vice President, Centre for Education Growth and Research (CEGR)",
+    "Member of Central Board & Executive Committee, Harijan Sevak Sangh (founded by Mahatma Gandhi)",
+    "National Advisory Board Member, SPIC MACAY",
+    "Chairman, U.P. Body Building & Fitness Association",
+    "Advisor, Shri Jagdish Prasad Mathur Charitable Trust (New Delhi)",
+    "Chairman, Livelihood Development Research Foundation (Delhi)",
+    "Mentor, Centre for Law and Good Governance (Delhi)",
+    "Mentor, International Skill Development Centre",
+    "National Council Member, All India Prohibition Council",
+    "Advisor, Citizen’s Commission for Dialogue, Justice and Reconciliation, India"
+  ],
+  "publications_and_works": [
+    {
+      "title": "Quotes I Quote",
+      "format": "Digital Anthology (FlipHTML5)",
+      "description": "A curated collection of 365 of Kunwar Shekhar Vijendra's favorite personal quotes, philosophical musings, and reflections on life, learning, and character."
+    },
+    {
+      "title": "Personal Blog & Essays",
+      "format": "Online Publications (WordPress & National Press)",
+      "description": "Reflections on National Education Policy (NEP 2020), rural empowerment, smart agriculture, and Gandhian principles of non-violence."
+    }
   ],
   "quotes": [
     "Education must not merely prepare students for a living; it must prepare them for life, grounding them in ethics, compassion, and innovation.",
     "True nation-building happens when world-class knowledge reaches the doorsteps of rural youth.",
-    "Ancient Indian wisdom and modern technology are not conflicting paths; they are two wings of the same bird of progress."
+    "Ancient Indian wisdom and modern technology are not conflicting paths; they are two wings of the same bird of progress.",
+    "We need education that builds character, strengthens the mind, expands the intellect, and fosters self-reliance.",
+    "A teacher affects eternity; he can never tell where his influence stops.",
+    "Service to humanity with humility and truth is the highest form of worship."
+  ],
+  "international_engagements": [
+    "United States of America", "United Kingdom", "Germany", "Australia",
+    "Russia", "China", "South Korea", "Vietnam", "United Arab Emirates",
+    "Mauritius", "Rwanda", "Uganda", "Croatia"
   ],
   "milestones": [
     {
       "id": "m_1989",
       "year": "1989",
-      "title": "Founding of NICE Society",
-      "category": "Education",
-      "summary": "Pioneered community computer literacy and vocational training across North India.",
-      "narrative": "In 1989, recognizing the imminent digital revolution, Kunwar Shekhar Vijendra founded the National Institute of Computer Education (NICE) Society. The initiative democratized computer literacy at a time when technology education was restricted to metropolitan centers.",
-      "photos": ["/photos/1989_nice_society.jpg"],
-      "citations": ["NICE Society Foundation Charter 1989", "Shobhit University Archive Reg. 01"]
+      "title": "Full-Time Volunteering & NICE Society Trust",
+      "category": "Foundation",
+      "summary": "Began dedicated full-time volunteer work as a promoter member with the NICE Society Trust.",
+      "narrative": "In 1989, Kunwar Shekhar Vijendra committed himself to societal transformation, joining as a promoter member of the National Institute of Computer Education (NICE) Society Trust. Anticipating the transformative impact of computing, he spearheaded computer literacy and vocational training across North India when technology was virtually inaccessible in rural pockets.",
+      "photos": ["/photos/image1.jpeg"],
+      "citations": ["NICE Society Trust Charter 1989", "Official Profile www.kunwarsv.in"]
     },
     {
       "id": "m_2000",
       "year": "2000",
-      "title": "Establishment of SIET Meerut",
-      "category": "Education",
-      "summary": "Established Shobhit Institute of Engineering & Technology, Meerut.",
-      "narrative": "To bridge the critical gap in technical and engineering talent in Uttar Pradesh, Kunwar Shekhar Vijendra established SIET in Meerut, featuring state-of-the-art laboratories in computer engineering, electronics, and biomedical disciplines.",
-      "photos": ["/photos/2000_siet_meerut.jpg"],
+      "title": "Establishment of Engineering & Tech Institutions",
+      "category": "Higher Education",
+      "summary": "Established Shobhit Institute of Engineering & Technology (SIET) in Meerut.",
+      "narrative": "To bridge critical technological skill gaps in Uttar Pradesh, he spearheaded the founding of SIET Meerut, establishing state-of-the-art laboratories in computer science, biotechnology, and electronics, creating unprecedented research opportunities for rural and semi-urban learners.",
+      "photos": ["/photos/image2.jpeg"],
       "citations": ["AICTE Approval Notification F.720-67-248/RC/94", "SIET Foundation Records"]
     },
     {
       "id": "m_2006",
       "year": "2006",
-      "title": "Conferred Deemed-to-be-University Status",
-      "category": "Education",
-      "summary": "Recognized by Government of India Ministry of HRD under Section 3 of UGC Act.",
-      "narrative": "In recognition of outstanding academic standards, research in biotechnology, and state-of-the-art infrastructure, the Central Government conferred Deemed-to-be-University status upon SIET Meerut, establishing Shobhit University.",
-      "photos": ["/photos/2006_deemed_university.jpg"],
-      "citations": ["MHRD Notification No. F.9-37/2004-U.3", "The Gazette of India 2006"]
+      "title": "Shobhit Deemed-to-be-University Charter",
+      "category": "University Charter",
+      "summary": "Conferment of Deemed-to-be University status under Section 3 of UGC Act 1956.",
+      "narrative": "In recognition of pioneering pedagogy and research in biotechnology and engineering, the Ministry of Human Resource Development (MHRD), Government of India, conferred Deemed University status to Shobhit Institute of Engineering & Technology, Meerut, fulfilling a landmark educational vision.",
+      "photos": ["/photos/image1.jpeg"],
+      "citations": ["MHRD Gazette Notification No. F.9-37/2004-U.3", "UGC Record 2006"]
     },
     {
       "id": "m_2012",
       "year": "2012",
-      "title": "Establishment of Shobhit University, Gangoh",
-      "category": "Youth Welfare",
-      "summary": "Founded second university campus in rural Gangoh, Saharanpur.",
-      "narrative": "Demonstrating unyielding commitment to rural youth upliftment, Chancellor Kunwar Shekhar Vijendra established Shobhit University at Gangoh under Uttar Pradesh State Act No. 3 of 2012, bringing world-class higher education to rural western UP.",
-      "photos": ["/photos/2012_gangoh_campus.jpg"],
-      "citations": ["UP State Act No. 3 of 2012", "UGC Section 2(f) Notification"]
-    },
-    {
-      "id": "m_2014",
-      "year": "2014",
-      "title": "Shobhit Ayurvedic Medical College & Hospital",
-      "category": "Healthcare & Ayurveda",
-      "summary": "Inauguration of a 100-bed hospital and research center for traditional medicine.",
-      "narrative": "Driven by his philosophy of holistic healthcare, he established Shobhit Ayurvedic Medical College & Hospital in Gangoh, combining ancient Ayurvedic healing with modern diagnostic facilities and providing heavily subsidized healthcare to rural families.",
-      "photos": ["/photos/2014_ayurveda_hospital.jpg"],
-      "citations": ["NCISM Approval Guidelines", "Ministry of AYUSH Healthcare Gazette"]
+      "title": "Shobhit University Gangoh State Charter",
+      "category": "Rural Empowerment",
+      "summary": "Enactment of Shobhit University, Gangoh via Uttar Pradesh State Legislature.",
+      "narrative": "Returning to his roots in Gangoh, Saharanpur, Kunwar Shekhar Vijendra founded Shobhit University Gangoh under Uttar Pradesh Act No. 3 of 2012, bringing higher education in agriculture, pharmacy, basic sciences, and engineering directly into a rural hinterland.",
+      "photos": ["/photos/image2.jpeg"],
+      "citations": ["Uttar Pradesh Act No. 3 of 2012", "UP State Gazette"]
     },
     {
       "id": "m_2018",
       "year": "2018",
-      "title": "Chairman of ASSOCHAM National Education Council",
-      "category": "Global Leadership",
-      "summary": "Leading national dialogue on higher education policy reforms and industry integration.",
-      "narrative": "Appointed as Chairman of ASSOCHAM's National Council on Education, Chancellor Vijendra represented Indian universities at apex policy forums, championing industry-academia synergy, skill-based curricula, and equitable access for student innovators.",
-      "photos": ["/photos/2018_assocham_leadership.jpg"],
-      "citations": ["ASSOCHAM National Summit Proceedings 2018", "National Council Directives"]
+      "title": "200-Bed Ayurveda Hospital & Naturopathy Centre",
+      "category": "Healthcare & Social",
+      "summary": "Inauguration of KSV Ayurved Medical College, 200-bed charitable hospital & Yoga-Naturopathy centre in rural Western UP.",
+      "narrative": "Recognizing the dire need for affordable health infrastructure in rural Saharanpur, his trust established a 200-bed Ayurvedic hospital with advanced diagnostic facilities, maternal care units, and a dedicated Centre for Naturopathy and Yogic Sciences, offering subsidized and free treatments.",
+      "photos": ["/photos/image1.jpeg"],
+      "citations": ["Ministry of AYUSH Guidelines", "Charitable Medical Registry 2018"]
     },
     {
-      "id": "m_2022",
-      "year": "2022",
-      "title": "AI & Biotechnology Centers of Excellence",
-      "category": "Education",
-      "summary": "Advanced research centers launched in bioinformatics, AI, and smart agriculture.",
-      "narrative": "Inaugurated dedicated research clusters at Shobhit University focused on applying Artificial Intelligence and genomics to solve regional agricultural and environmental challenges.",
-      "photos": ["/photos/2022_ai_biotech.jpg"],
-      "citations": ["Shobhit University Research Annual Report 2022"]
+      "id": "m_2019_11",
+      "year": "2019",
+      "title": "15th World Education Summit (Mumbai)",
+      "category": "National Conclaves",
+      "summary": "Delivered key addresses on higher education policy reform and future skills.",
+      "narrative": "Addressed academic leaders, vice chancellors, and policymakers at the 15th World Education Summit in Mumbai, advocating for student-centric experiential learning and the democratization of skill education.",
+      "photos": ["/photos/image2.jpeg"],
+      "citations": ["15th World Education Summit Proceedings", "Elets Technomedia 2019"]
+    },
+    {
+      "id": "m_2019_12",
+      "year": "2019",
+      "title": "Gandhian Path for a Global Nonviolent Planet",
+      "category": "Social & Gandhian",
+      "summary": "Featured speaker on peace, nonviolence, and Gandhian ideals at Gandhi Smriti, New Delhi.",
+      "narrative": "On 9 December 2019, Kunwar Shekhar Vijendra spoke at Gandhi Smriti, New Delhi on 'A Gandhian Path for a Global Nonviolent Planet: Strategies of Action for a Culture of Peace,' emphasizing how educational institutions must cultivate active compassion and communal harmony.",
+      "photos": ["/photos/image1.jpeg"],
+      "citations": ["Gandhi Smriti & Darshan Samiti Event Archives 09-12-2019", "Delhi Event Registry"]
+    },
+    {
+      "id": "m_2020_02",
+      "year": "2020",
+      "title": "Keynote on Rural Education & 13th ASSOCHAM Conclave",
+      "category": "National Conclaves",
+      "summary": "Delivered keynote at 2nd National Education Excellence Conclave and ASSOCHAM 13th Higher Education Summit.",
+      "narrative": "In late February 2020, as Chairman of ASSOCHAM National Council on Education, he addressed national leaders in New Delhi on rural education imperatives and inaugurated the 5th Global Outreach Conference on 'Modern Approaches for Smart Agriculture' at Shobhit University Meerut.",
+      "photos": ["/photos/image2.jpeg"],
+      "citations": ["ASSOCHAM Higher Education Conclave Proceedings", "National Education Excellence Conclave 2020"]
     }
   ]
 }
