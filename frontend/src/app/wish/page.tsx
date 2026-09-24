@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import confetti from "canvas-confetti";
-import { Heart, Sparkles, Send, CheckCircle2, ArrowLeft, School } from "lucide-react";
+import { Heart, Send, CheckCircle2, ArrowLeft, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { submitStudentWish } from "../../lib/api";
 
@@ -24,7 +24,7 @@ const SAMPLE_WISHES = [
   "Happy Birthday Sir! Thank you for bringing world-class laboratories and education to our region."
 ];
 
-const AVATAR_COLORS = ["#F59E0B", "#10B981", "#3B82F6", "#8B5CF6", "#EC4899", "#06B6D4"];
+const AVATAR_COLORS = ["#C9A45C", "#E4C98A", "#8B7340", "#6E695F", "#9B7A38"];
 
 export default function WishPortalPage() {
   const [name, setName] = useState("");
@@ -49,10 +49,10 @@ export default function WishPortalPage() {
 
       setIsSuccess(true);
       confetti({
-        particleCount: 100,
-        spread: 70,
+        particleCount: 50,
+        spread: 60,
         origin: { y: 0.6 },
-        colors: ["#f59e0b", "#fbbf24", "#ffffff", "#3b82f6"],
+        colors: ["#C9A45C", "#E4C98A", "#F5F2EA"],
       });
     } catch (err) {
       console.error(err);
@@ -69,49 +69,45 @@ export default function WishPortalPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#040914] text-slate-100 p-4 md:p-8 flex flex-col justify-between max-w-lg mx-auto">
+    <main className="min-h-screen bg-[#0B0B0A] text-[#F5F2EA] p-4 sm:p-6 flex flex-col justify-between max-w-lg mx-auto">
       {/* Brand Header */}
-      <div className="pt-4 pb-6 text-center space-y-2">
-        <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-500/25 border border-amber-400/40">
-          <span className="font-serif font-black text-slate-950 text-2xl">SU</span>
-        </div>
-        <div>
-          <h1 className="font-serif font-bold text-2xl text-white">
-            Send Birthday Wishes
-          </h1>
-          <p className="text-xs text-amber-300 font-medium">
-            To Hon&apos;ble Chancellor Kunwar Shekhar Vijendra
-          </p>
-          <p className="text-[11px] text-slate-400">Shobhit University Birthday Celebration</p>
-        </div>
+      <div className="pt-6 pb-4 text-center space-y-2">
+        <span className="text-[10px] font-mono tracking-[0.25em] text-[#C9A45C] uppercase">
+          Shobhit University Tribute
+        </span>
+        <h1 className="font-display font-medium text-2xl sm:text-3xl text-[#F5F2EA] tracking-wide">
+          SEND BIRTHDAY WISHES
+        </h1>
+        <p className="text-xs font-mono text-[#E4C98A]">
+          Hon&apos;ble Chancellor Kunwar Shekhar Vijendra
+        </p>
       </div>
 
-      {/* Main Card Container */}
-      <div className="glass-panel rounded-3xl p-6 border border-amber-500/20 shadow-2xl relative">
+      {/* Main Form Card */}
+      <div className="heritage-card rounded-3xl p-6 sm:p-8 border border-white/10 relative shadow-2xl">
         {isSuccess ? (
-          <div className="py-10 text-center space-y-5 animate-in fade-in zoom-in-95 duration-200">
-            <div className="w-16 h-16 mx-auto rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/40">
-              <CheckCircle2 className="w-8 h-8" />
+          <div className="py-10 text-center space-y-5">
+            <div className="w-14 h-14 mx-auto rounded-full bg-[#1c1a17] text-[#C9A45C] flex items-center justify-center border border-[#C9A45C]/30">
+              <CheckCircle2 className="w-7 h-7" />
             </div>
             <div className="space-y-1">
-              <h2 className="font-serif font-bold text-2xl text-white">Thank You, {name}!</h2>
-              <p className="text-xs text-slate-300 leading-relaxed max-w-xs mx-auto">
-                Your birthday tribute has been broadcast live to the main celebration screen!
+              <h2 className="font-display font-medium text-2xl text-[#F5F2EA]">Thank You, {name}</h2>
+              <p className="text-xs text-[#9B968B] max-w-xs mx-auto font-ui leading-relaxed">
+                Your birthday tribute has been broadcast live to the main auditorium screen.
               </p>
             </div>
             <div className="pt-4 space-y-2">
               <button
-                id="send-another-wish-btn"
                 onClick={handleReset}
-                className="w-full py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-amber-500/20"
+                className="w-full py-3 rounded-full bg-[#C9A45C] hover:bg-[#E4C98A] text-[#0B0B0A] font-ui text-xs font-semibold tracking-wider transition-all"
               >
                 Send Another Wish
               </button>
               <Link
                 href="/"
-                className="block text-xs text-slate-400 hover:text-amber-300 transition-colors pt-2"
+                className="block text-xs text-[#9B968B] hover:text-[#E4C98A] transition-colors pt-2 font-mono"
               >
-                Return to Chancellor AI 360 Presentation
+                View Chancellor AI 360 Presentation →
               </Link>
             </div>
           </div>
@@ -119,8 +115,8 @@ export default function WishPortalPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Student Name */}
             <div>
-              <label htmlFor="student-name-input" className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Your Full Name <span className="text-amber-400">*</span>
+              <label htmlFor="student-name-input" className="block text-xs font-mono text-[#9B968B] mb-1.5 uppercase tracking-wider">
+                Your Full Name <span className="text-[#C9A45C]">*</span>
               </label>
               <input
                 id="student-name-input"
@@ -129,53 +125,33 @@ export default function WishPortalPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Aarav Sharma"
-                className="w-full bg-slate-900/90 border border-slate-800 focus:border-amber-500/60 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition-all"
+                className="w-full bg-[#0e0e0d] border border-white/10 focus:border-[#C9A45C]/60 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-[#F5F2EA] placeholder-[#9B968B]/50 focus:outline-none transition-all font-ui"
               />
             </div>
 
             {/* Department */}
             <div>
-              <label htmlFor="department-select" className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Faculty / Department
+              <label htmlFor="department-select" className="block text-xs font-mono text-[#9B968B] mb-1.5 uppercase tracking-wider">
+                Faculty / Affiliation
               </label>
               <select
                 id="department-select"
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
-                className="w-full bg-slate-900/90 border border-slate-800 focus:border-amber-500/60 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none transition-all"
+                className="w-full bg-[#0e0e0d] border border-white/10 focus:border-[#C9A45C]/60 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-[#F5F2EA] focus:outline-none transition-all font-ui"
               >
                 {DEPARTMENTS.map((dept) => (
-                  <option key={dept} value={dept} className="bg-slate-950 text-slate-100">
+                  <option key={dept} value={dept} className="bg-[#121210] text-[#F5F2EA]">
                     {dept}
                   </option>
                 ))}
               </select>
             </div>
 
-            {/* Avatar Color Picker */}
+            {/* Tribute Message */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Choose Badge Color
-              </label>
-              <div className="flex items-center space-x-2.5">
-                {AVATAR_COLORS.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => setSelectedColor(c)}
-                    className={`w-7 h-7 rounded-full transition-transform ${
-                      selectedColor === c ? "scale-125 ring-2 ring-white ring-offset-2 ring-offset-[#040914]" : "opacity-70"
-                    }`}
-                    style={{ backgroundColor: c }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Birthday Wish Message */}
-            <div>
-              <label htmlFor="wish-message-input" className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Your Birthday Tribute <span className="text-amber-400">*</span>
+              <label htmlFor="wish-message-input" className="block text-xs font-mono text-[#9B968B] mb-1.5 uppercase tracking-wider">
+                Your Birthday Tribute <span className="text-[#C9A45C]">*</span>
               </label>
               <textarea
                 id="wish-message-input"
@@ -183,15 +159,15 @@ export default function WishPortalPage() {
                 rows={4}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Share your appreciation, memories, or prayers for Chancellor Sir..."
-                className="w-full bg-slate-900/90 border border-slate-800 focus:border-amber-500/60 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition-all resize-none"
+                placeholder="Share your appreciation, gratitude, or prayers for Chancellor Sir..."
+                className="w-full bg-[#0e0e0d] border border-white/10 focus:border-[#C9A45C]/60 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-[#F5F2EA] placeholder-[#9B968B]/50 focus:outline-none transition-all font-ui resize-none"
               />
             </div>
 
             {/* Quick Templates */}
             <div>
-              <span className="block text-[11px] font-semibold text-slate-400 mb-1.5">
-                Quick Template Taps:
+              <span className="block text-[10px] font-mono text-[#9B968B] mb-1.5 uppercase tracking-wider">
+                Quick Appreciation Taps:
               </span>
               <div className="space-y-1.5">
                 {SAMPLE_WISHES.map((sample, idx) => (
@@ -199,7 +175,7 @@ export default function WishPortalPage() {
                     key={idx}
                     type="button"
                     onClick={() => setMessage(sample)}
-                    className="w-full text-left text-[11px] p-2 rounded-lg bg-slate-900/60 hover:bg-amber-500/10 border border-slate-800 hover:border-amber-500/30 text-slate-300 hover:text-amber-300 transition-all line-clamp-1"
+                    className="w-full text-left text-[11px] p-2 rounded-lg bg-[#0e0e0d] hover:bg-[#1c1a17] border border-white/5 hover:border-[#C9A45C]/30 text-[#9B968B] hover:text-[#E4C98A] transition-all line-clamp-1 font-ui"
                   >
                     &ldquo;{sample}&rdquo;
                   </button>
@@ -212,17 +188,17 @@ export default function WishPortalPage() {
               id="submit-wish-btn"
               type="submit"
               disabled={isSubmitting || !name.trim() || !message.trim()}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 text-slate-950 font-serif font-black text-sm tracking-wide shadow-xl shadow-amber-500/25 active:scale-95 transition-all flex items-center justify-center space-x-2 cursor-pointer mt-2"
+              className="w-full py-3.5 rounded-full bg-[#C9A45C] hover:bg-[#E4C98A] disabled:opacity-30 text-[#0B0B0A] font-ui font-semibold text-xs tracking-widest uppercase transition-all shadow-lg active:scale-95 flex items-center justify-center space-x-2 cursor-pointer mt-2"
             >
-              <Send className="w-4 h-4" />
-              <span>{isSubmitting ? "Broadcasting to Stage..." : "Send Birthday Tribute"}</span>
+              <Send className="w-3.5 h-3.5" />
+              <span>{isSubmitting ? "Broadcasting..." : "Broadcast Birthday Tribute"}</span>
             </button>
           </form>
         )}
       </div>
 
       {/* Footer */}
-      <div className="py-4 text-center text-[11px] text-slate-500">
+      <div className="py-4 text-center text-[10px] font-mono text-[#9B968B]/60">
         Shobhit University • Chancellor AI 360 Tribute Portal
       </div>
     </main>
