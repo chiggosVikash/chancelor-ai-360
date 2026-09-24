@@ -238,19 +238,56 @@ Instructions:
         recent_wishes: Optional[List[StudentWish]] = None,
         language: str = "bilingual"
     ) -> BirthdayTributeResponse:
-        active_wishes = wishes if wishes is not None else (recent_wishes or [])
+        import random
+        active_wishes = list(wishes if wishes is not None else (recent_wishes or []))
         count = len(active_wishes) if active_wishes else 24
 
-        # Try OpenRouter for dynamic poem synthesis if key is present
+        thematic_angles = [
+            "Pioneering Rural Higher Education & Digital India (NICE 1989 to Modern AI)",
+            "Reviving Ayurveda, Traditional Medicine & 200-Bed Healing Sanctuaries",
+            "Gandhian Ethics, Nation-Building & The Wisdom of Quotes I Quote",
+            "Empowering Youth, Grassroots Innovation & Global Academic Partnerships",
+            "Roots in Gangoh: Cultural Heritage, Sanskrit & Transformative Educational Leadership"
+        ]
+        poetic_styles = [
+            "Lyrical Anthem with resonant, celebratory rhyming stanzas",
+            "Inspiring Classical Ode with dignified, timeless imagery",
+            "Modern Commemorative Ballad weaving student voices and cultural pride",
+            "Soulful Poetic Ode honoring roots, vision, and human warmth"
+        ]
+
+        chosen_theme = random.choice(thematic_angles)
+        chosen_style = random.choice(poetic_styles)
+
+        shuffled_wishes = list(active_wishes)
+        random.shuffle(shuffled_wishes)
+        sample_wishes = [
+            {"student": w.student_name, "department": w.department, "wish": w.message}
+            for w in shuffled_wishes[:8]
+        ]
+
         if self.openrouter_api_key:
             try:
-                sample_wishes = [w.message for w in active_wishes[:10]]
                 prompt = (
-                    "Write an inspiring 4-stanza Birthday Tribute Poem for Kunwar Shekhar Vijendra, "
-                    "Chancellor of Shobhit University. Stanza 1 & 2 must honor his roots in Gangoh, Western UP, "
-                    "founding NICE Society in 1989, and establishing the 200-bed Ayurvedic hospital. "
-                    f"Stanza 3 & 4 must incorporate heartfelt gratitude from student greetings: {json.dumps(sample_wishes)}. "
-                    "Return ONLY the 4 stanzas separated by double newlines."
+                    f"You are a master commemorative poet. Write a unique, emotionally stirring 4-stanza Birthday Tribute Poem for Kunwar Shekhar Vijendra, Chancellor of Shobhit University.\n"
+                    f"Thematic Focus: {chosen_theme}\n"
+                    f"Poetic Style: {chosen_style}\n"
+                    f"Student Greetings to naturally incorporate in Stanzas 3 & 4: {json.dumps(sample_wishes)}\n\n"
+                    "Requirements:\n"
+                    "1. Stanza 1 & 2: Honor his vision, institutional heritage, and wisdom.\n"
+                    "2. Stanza 3 & 4: Seamlessly incorporate actual student names and sentiments from the greetings.\n"
+                    "3. Generate a fresh, creative title tailored to this poem.\n\n"
+                    "Respond ONLY in valid JSON format:\n"
+                    "{\n"
+                    '  "title": "<Creative Unique Title>",\n'
+                    f'  "theme": "{chosen_theme}",\n'
+                    '  "stanzas": [\n'
+                    '    "<Stanza 1 (4 lines)>",\n'
+                    '    "<Stanza 2 (4 lines)>",\n'
+                    '    "<Stanza 3 (4 lines)>",\n'
+                    '    "<Stanza 4 (4 lines)>"\n'
+                    "  ]\n"
+                    "}"
                 )
                 headers = {
                     "Authorization": f"Bearer {self.openrouter_api_key}",
@@ -258,48 +295,75 @@ Instructions:
                     "X-Title": "Chancellor AI 360",
                     "Content-Type": "application/json"
                 }
-                async with httpx.AsyncClient(timeout=5.0) as client:
+                async with httpx.AsyncClient(timeout=7.0) as client:
                     resp = await client.post(
                         "https://openrouter.ai/api/v1/chat/completions",
                         headers=headers,
                         json={
                             "model": self.openrouter_model,
                             "messages": [{"role": "user", "content": prompt}],
-                            "temperature": 0.6,
-                            "max_tokens": 500
+                            "temperature": 0.85,
+                            "response_format": {"type": "json_object"}
                         }
                     )
                     if resp.status_code == 200:
-                        text = resp.json()["choices"][0]["message"]["content"].strip()
-                        stanzas = [s.strip() for s in text.split("\n\n") if s.strip()]
+                        content_str = resp.json()["choices"][0]["message"]["content"].strip()
+                        parsed = json.loads(content_str)
+                        stanzas = [s.strip() for s in parsed.get("stanzas", []) if s.strip()]
+                        title = parsed.get("title", "Birthday Ode to Chancellor Kunwar Shekhar Vijendra")
+                        theme = parsed.get("theme", chosen_theme)
+
                         if len(stanzas) >= 3:
                             recitation = "\n\n".join(stanzas)
                             return BirthdayTributeResponse(
-                                title="A Living Legacy: Birthday Ode to Kunwar Shekhar Vijendra",
-                                theme="Gandhian Leadership, 35 Years of Educational Pioneering & Rural Transformation",
+                                title=title,
+                                theme=theme,
                                 poem_stanzas=stanzas,
                                 recitation_text=recitation,
                                 total_wishes_synthesized=count
                             )
             except Exception as e:
-                logger.warning(f"OpenRouter poem generation failed: {e}. Using deterministic poem.")
+                logger.warning(f"OpenRouter dynamic poem generation failed: {e}. Using deterministic fallback pool.")
 
-        stanzas = [
-            "From Gangoh's soil to Meerut's campus wide,\nSince eighty-nine, you walked with truth as guide.\nWith NICE you sparked a digital sunrise,\nWhere village youth could reach into the skies.",
-
-            "A Gandhian heart with vision bright and pure,\nYou built the halls where ethics will endure.\nTwo universities, a healing hospital's grace—\nTwo hundred beds that bless a rural place.",
-
-            "Through 'Quotes I Quote' your wisdom shines so clear,\nA guiding light we honor and revere.\nOn this auspicious day, as one we stand,\nTo greet the noble leader of our land.",
-
-            "Happy Birthday, Chancellor Sir, with hearts aglow!\nMay peace and boundless blessings round you flow.\nFor thirty-five proud years of selfless art,\nWe offer gratitude from every student's heart."
+        fallback_pool = [
+            {
+                "title": "A Living Legacy: The Visionary of Gangoh",
+                "theme": "Educational Pioneering & Rural Transformation",
+                "stanzas": [
+                    "From Gangoh's soil to Meerut's campus wide,\nSince eighty-nine, you walked with truth as guide.\nWith NICE you sparked a digital sunrise,\nWhere village youth could reach into the skies.",
+                    "A Gandhian heart with vision bright and pure,\nYou built the halls where ethics will endure.\nTwo universities, a healing hospital's grace—\nTwo hundred beds that bless a rural place.",
+                    "Through Quotes I Quote your wisdom shines so clear,\nA guiding light we honor and revere.\nOn this auspicious day, as one we stand,\nTo greet the noble leader of our land.",
+                    "Happy Birthday, Chancellor Sir, with hearts aglow!\nMay peace and boundless blessings round you flow.\nFor thirty-five proud years of selfless art,\nWe offer gratitude from every student's heart."
+                ]
+            },
+            {
+                "title": "The Healer's Touch: Ode to Tradition & Wisdom",
+                "theme": "Ayurveda Revival & Holistic Healing",
+                "stanzas": [
+                    "Where ancient herbs and modern sciences meet,\nYou placed pure healing at the people's feet.\nA hospital of hope with two hundred beds,\nWhere compassion heals and sacred solace spreads.",
+                    "In Gangoh's green and sacred tranquil air,\nYou nurtured wellness with paternal care.\nReviving Ayurveda's timeless, honored lore,\nBringing holistic health to every door.",
+                    "Our students voice their deepest gratitude and praise,\nFor nurturing their minds through golden days.\nFrom research labs to corridors of light,\nYour dedication shines forever bright.",
+                    "On this blessed birthday, may fortune gently smile,\nExtending health and joy across each mile.\nChancellor Vijendra, mentor, guide, and friend,\nMay honor and good health your days attend!"
+                ]
+            },
+            {
+                "title": "Architect of Dreams: Youth & Nation-Building",
+                "theme": "Youth Empowerment & Grassroots Innovation",
+                "stanzas": [
+                    "Thirty-five proud years of nation-building pride,\nWith courage and humility side by side.\nYou taught the youth to innovate and soar,\nWhile keeping character at their very core.",
+                    "From rural hamlets to the global stage,\nYou wrote a brilliant, unforgettable page.\nIncubating dreams with incubator grace,\nEmpowering minds in every field and space.",
+                    "From AI scholars to legal minds inspired,\nBy your relentless vision we are fired.\nEach student wish a petal on your way,\nTo celebrate your leadership today.",
+                    "Happy Birthday, Chancellor Sir, our guiding star!\nYour impact echoes both from near and far.\nMay peace, longevity, and joy divine,\nUpon your noble journey ever shine!"
+                ]
+            }
         ]
 
-        recitation = "\n\n".join(stanzas)
-
+        chosen_fallback = random.choice(fallback_pool)
         return BirthdayTributeResponse(
-            title="A Living Legacy: Birthday Ode to Kunwar Shekhar Vijendra",
-            theme="Gandhian Leadership, 35 Years of Educational Pioneering & Rural Transformation",
-            poem_stanzas=stanzas,
-            recitation_text=recitation,
+            title=chosen_fallback["title"],
+            theme=chosen_fallback["theme"],
+            poem_stanzas=chosen_fallback["stanzas"],
+            recitation_text="\n\n".join(chosen_fallback["stanzas"]),
             total_wishes_synthesized=count
         )
+
