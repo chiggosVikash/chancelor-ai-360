@@ -1,22 +1,39 @@
 // [PATTERN: Gateway] — Centralized API and WebSocket communication gateway
 export const getApiBaseUrl = (): string => {
+  // 1. If explicit environment variable is set (e.g. in Vercel or .env.local), honor it first
+  const envUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+  if (envUrl && !envUrl.includes("localhost:8000")) {
+    return envUrl.replace(/\/$/, "");
+  }
+
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
-    if (host !== "localhost" && host !== "127.0.0.1") {
+    // 2. Only auto-bind port 8000 if accessing via a private LAN IP (e.g. 192.168.x.x or 10.x.x.x)
+    const isPrivateLanIp = /^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(host);
+    if (isPrivateLanIp) {
       return `http://${host}:8000`;
     }
   }
-  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+  // 3. Fallback to env or localhost
+  return envUrl || "http://localhost:8000";
 };
 
 export const getWsBaseUrl = (): string => {
-  if (typeof window !== "undefined") {
-    const host = window.location.hostname;
-    if (host !== "localhost" && host !== "127.0.0.1") {
-      return `ws://${host}:8000/ws/wishes`;
-    }
+  const envWs = process.env.NEXT_PUBLIC_WS_URL?.trim();
+  if (envWs && !envWs.includes("localhost:8000")) {
+    return envWs.replace(/\/$/, "");
   }
-  return process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000/ws/wishes";
+
+  const apiUrl = getApiBaseUrl();
+  if (apiUrl.startsWith("https://")) {
+    return `${apiUrl.replace("https://", "wss://")}/ws/wishes`;
+  }
+  if (apiUrl.startsWith("http://")) {
+    return `${apiUrl.replace("http://", "ws://")}/ws/wishes`;
+  }
+
+  return envWs || "ws://localhost:8000/ws/wishes";
 };
 
 export const API_BASE_URL = getApiBaseUrl();
