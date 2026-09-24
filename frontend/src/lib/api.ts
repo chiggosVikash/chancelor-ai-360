@@ -85,3 +85,9 @@ export async function generateBirthdayTribute(): Promise<BirthdayTributeResponse
   if (!res.ok) throw new Error("Failed to generate tribute poem");
   return res.json();
 }
+
+export async function fetchWishes(): Promise<StudentWish[]> {
+  const res = await fetch(`${API_BASE_URL}/api/wishes`);
+  if (!res.ok) throw new Error("Failed to fetch wishes");
+  return res.json();
+}

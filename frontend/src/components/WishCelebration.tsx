@@ -14,7 +14,7 @@ import {
   X
 } from "lucide-react";
 import confetti from "canvas-confetti";
-import { StudentWish, generateBirthdayPoem, submitStudentWish } from "../lib/api";
+import { StudentWish, generateBirthdayTribute, submitStudentWish } from "../lib/api";
 import { useSpeechSynthesis } from "../hooks/useSpeech";
 import { cn } from "@/lib/cn";
 
@@ -89,7 +89,7 @@ export const WishCelebration: React.FC<WishCelebrationProps> = ({
   const handleGeneratePoem = async () => {
     setIsGeneratingPoem(true);
     try {
-      const data = await generateBirthdayPoem();
+      const data = await generateBirthdayTribute();
       setPoemData(data);
 
       confetti({

@@ -26,7 +26,7 @@ const containerVariants = {
 };
 const itemVariants = {
   hidden: { opacity: 0, y: 18 },
-  show:   { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
+  show:   { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } },
 };
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreJourney, onTalkToAI }) => {
@@ -93,7 +93,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreJourney, onTa
                   key={label}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay, type: "spring", stiffness: 400, damping: 20 }}
+                  transition={{ delay, type: "spring" as const, stiffness: 400, damping: 20 }}
                   className={cn(
                     "absolute z-20 flex items-center gap-2 px-3 py-2 rounded-xl",
                     "bg-white border border-[rgba(184,134,44,0.25)] shadow-md",
@@ -116,7 +116,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreJourney, onTa
               <motion.div
                 initial={{ opacity: 0, scale: 0.9, x: 30 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
-                transition={{ type: "spring", stiffness: 200, damping: 22, delay: 0.3 }}
+                transition={{ type: "spring" as const, stiffness: 200, damping: 22, delay: 0.3 }}
                 style={{ ...tiltStyle, transition: "transform 0.25s ease-out" }}
                 className="relative group"
               >
@@ -152,7 +152,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreJourney, onTa
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.85 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ delay: 1.4, type: "spring", stiffness: 400, damping: 18 }}
+                  transition={{ delay: 1.4, type: "spring" as const, stiffness: 400, damping: 18 }}
                   className="absolute -bottom-4 -left-6 bg-gradient-to-br from-[#1E2D5A] to-[#2E4080] text-white px-4 py-2.5 rounded-2xl shadow-lg text-xs font-ui font-semibold flex items-center gap-2"
                 >
                   🎂 <span>Happy Birthday, Sir!</span>
@@ -206,7 +206,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreJourney, onTa
               <motion.button
                 whileHover={{ scale: 1.03, y: -1 }}
                 whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                transition={{ type: "spring" as const, stiffness: 500, damping: 30 }}
                 onClick={onExploreJourney}
                 id="hero-explore-journey-btn"
                 className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1E2D5A] hover:bg-[#2E4080] text-white font-semibold text-sm font-ui transition-colors shadow-md"
@@ -218,7 +218,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreJourney, onTa
               <motion.button
                 whileHover={{ scale: 1.03, y: -1 }}
                 whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                transition={{ type: "spring" as const, stiffness: 500, damping: 30 }}
                 onClick={onTalkToAI}
                 id="hero-talk-ai-btn"
                 className="flex items-center gap-2 px-6 py-3 rounded-xl bg-transparent border-2 border-[#B8862C] text-[#B8862C] hover:bg-[#FDF5E4] font-semibold text-sm font-ui transition-all"
