@@ -7,6 +7,7 @@ import { JourneyTimeline } from "../components/JourneyTimeline";
 import { WisdomPortal } from "../components/WisdomPortal";
 import { WishCelebration } from "../components/WishCelebration";
 import { Footer } from "../components/Footer";
+import { BirthdayGreetingOverlay } from "../components/BirthdayGreetingOverlay";
 import { useSpeechSynthesis } from "../hooks/useSpeech";
 import { QRCodeSVG } from "qrcode.react";
 import { X, Heart } from "lucide-react";
@@ -110,6 +111,9 @@ export default function MasterStageExperience() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF8F4] text-[#1A1614] selection:bg-[#B8862C]/20 selection:text-[#B8862C] relative">
+      {/* 0. Birthday Greeting Welcome Ceremony Overlay with Firecracker Confetti & Pop Sound */}
+      <BirthdayGreetingOverlay />
+
       {/* 1. Sticky Navigation Bar */}
       <Navbar
         isVoiceEnabled={isVoiceEnabled}

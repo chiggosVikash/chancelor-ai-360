@@ -46,6 +46,10 @@ body {
   font-family: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
 }
 
+.font-script {
+  font-family: var(--font-kaushan), cursive;
+}
+
 /* ─── Gold Text ─────────────────────────────────────────────── */
 .gold-text { color: var(--gold); }
 .gold-gradient-text {
@@ -139,3 +143,38 @@ body {
     radial-gradient(ellipse at 80% 10%, rgba(184,134,44,0.05) 0%, transparent 60%),
     radial-gradient(circle at 10% 60%, rgba(30,45,90,0.04) 0%, transparent 50%);
 }
+
+/* ─── Hero Dual Slide Vertical Marquee ───────────────────────── */
+@keyframes verticalMarqueeDown {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes verticalMarqueeUp {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-marquee-down {
+  animation: verticalMarqueeDown 36s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-up {
+  animation: verticalMarqueeUp 36s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-down:hover,
+.animate-marquee-up:hover {
+  animation-play-state: paused;
+}
+

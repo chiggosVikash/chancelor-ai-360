@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans, Kaushan_Script } from "next/font/google";
 import "./globals.css";
 
 // [SOLID: SRP] — Layout configures global typography providers and root document envelope
@@ -14,6 +14,13 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const kaushanScript = Kaushan_Script({
+  variable: "--font-kaushan",
+  subsets: ["latin"],
+  weight: "400",
   display: "swap",
 });
 
@@ -38,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${plusJakartaSans.variable} h-full antialiased`}
+      className={`${outfit.variable} ${plusJakartaSans.variable} ${kaushanScript.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#FAF8F4] text-[#1A1614] selection:bg-[#B8862C]/20 selection:text-[#B8862C]">
         {children}
