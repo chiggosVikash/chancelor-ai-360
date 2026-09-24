@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Sparkles,
   Send,
   Volume2,
   VolumeX,
@@ -122,8 +121,8 @@ export const WisdomPortal: React.FC<WisdomPortalProps> = ({
 
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold font-ui bg-[#FDF5E4] text-[#B8862C] border border-[rgba(184,134,44,0.30)] uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-[#D4A84B]" />
+          <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold font-ui bg-[#FDF5E4] text-[#B8862C] border border-[rgba(184,134,44,0.30)] uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B8862C]" />
             Conversational Legacy Guide
           </span>
           <h2 className="font-display font-semibold text-3xl sm:text-5xl text-[#1A1614] tracking-tight">
@@ -258,7 +257,7 @@ export const WisdomPortal: React.FC<WisdomPortalProps> = ({
                           onClick={() => handleSendQuestion(suggestion)}
                           className="text-xs px-3 py-1.5 rounded-full bg-white hover:bg-[#FDF5E4] text-[#4A3F35] hover:text-[#B8862C] border border-[rgba(26,22,20,0.08)] hover:border-[rgba(184,134,44,0.30)] transition-all font-ui shadow-sm active:scale-95"
                         >
-                          ✦ {suggestion}
+                          {suggestion}
                         </button>
                       ))}
                     </div>
