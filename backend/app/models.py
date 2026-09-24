@@ -1,13 +1,15 @@
+import uuid
+from datetime import datetime
 # [SOLID: SRP] — Domain models isolate data contracts and validation from business logic
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
 class StudentWish(BaseModel):
-    id: str = Field(..., description="Unique identifier for the wish")
+    id: Optional[str] = Field(default_factory=lambda: f"wish_{int(datetime.now().timestamp())}_{uuid.uuid4().hex[:6]}", description="Unique identifier for the wish")
     student_name: str = Field(..., description="Name of student or faculty member")
-    department: str = Field(..., description="Department or course, e.g., B.Tech CSE, Ayurveda")
+    department: str = Field(default="Shobhit University", description="Department or course, e.g., B.Tech CSE, Ayurveda")
     message: str = Field(..., description="Heartfelt birthday message")
-    timestamp: str = Field(..., description="ISO 8601 formatted timestamp")
+    timestamp: Optional[str] = Field(default_factory=lambda: datetime.now().strftime("%I:%M %p"), description="Formatted timestamp")
     avatar_color: Optional[str] = Field(default="#F59E0B", description="Hex color for avatar badge")
 
 class Milestone(BaseModel):
