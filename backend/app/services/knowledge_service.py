@@ -1,5 +1,5 @@
 # [PATTERN: Repository] — Encapsulates reading and querying biographical knowledge base
-# [SOLID: SRP] — Sole responsibility is loading and searching verified Chancellor data
+# [SOLID: SRP] — Sole responsibility is loading, searching, and surfacing verified Chancellor data
 import json
 import os
 from typing import List, Dict, Any, Optional
@@ -19,14 +19,23 @@ class KnowledgeService:
         with open(self.data_path, "r", encoding="utf-8") as f:
             return json.load(f)
 
+    def reload(self):
+        """Forces cache invalidation and reloading from disk."""
+        self._profile_cache = self._load_data()
+
     def get_chancellor_overview(self) -> Dict[str, Any]:
         return {
             "name": self._profile_cache.get("name"),
             "title": self._profile_cache.get("title"),
+            "origin": self._profile_cache.get("origin"),
+            "office_location": self._profile_cache.get("office_location"),
+            "persona_summary": self._profile_cache.get("persona_summary"),
             "biography": self._profile_cache.get("biography"),
             "core_pillars": self._profile_cache.get("core_pillars", []),
             "leadership_roles": self._profile_cache.get("leadership_roles", []),
-            "quotes": self._profile_cache.get("quotes", [])
+            "publications_and_works": self._profile_cache.get("publications_and_works", []),
+            "quotes": self._profile_cache.get("quotes", []),
+            "international_engagements": self._profile_cache.get("international_engagements", [])
         }
 
     def get_all_milestones(self) -> List[Milestone]:
@@ -48,11 +57,17 @@ class KnowledgeService:
                     continue
 
             # Check search match across fields including category
-            if q:
-                match_text = f"{milestone.year} {milestone.title} {milestone.category} {milestone.summary} {milestone.narrative} {' '.join(milestone.citations)}".lower()
-                if q not in match_text and normalized_q not in match_text:
-                    continue
-
-            results.append(milestone)
+            if normalized_q:
+                searchable_text = f"{milestone.title} {milestone.year} {milestone.summary} {milestone.narrative} {milestone.category}".lower()
+                if normalized_q in searchable_text:
+                    results.append(milestone)
+            else:
+                results.append(milestone)
 
         return results
+
+    def get_milestone_by_year(self, year: str) -> Optional[Milestone]:
+        for m in self.get_all_milestones():
+            if m.year == year or year in m.year:
+                return m
+        return None
