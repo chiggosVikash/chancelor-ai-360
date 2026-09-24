@@ -6,7 +6,6 @@ import {
   ChevronRight,
   Calendar,
   BookOpen,
-  Sparkles,
   Award,
   ArrowUpRight,
   X,
@@ -135,8 +134,8 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="space-y-2">
-            <span className="text-xs font-semibold font-ui tracking-[0.2em] text-[#B8862C] uppercase flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#D4A84B]" />
+            <span className="text-xs font-semibold font-ui tracking-[0.2em] text-[#B8862C] uppercase flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B8862C]" />
               Chronological Odyssey
             </span>
             <h2 className="font-display font-semibold text-3xl sm:text-5xl text-[#1A1614] tracking-tight">
@@ -288,8 +287,8 @@ export const JourneyTimeline: React.FC<JourneyTimelineProps> = ({
                     }}
                     className="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-[#1E2D5A] hover:bg-[#2E4080] text-white font-ui font-semibold text-xs transition-all shadow-md active:scale-95"
                   >
-                    <Sparkles className="w-4 h-4 text-[#D4A84B]" />
                     <span>Ask Chancellor AI About This Era</span>
+                    <ArrowUpRight className="w-4 h-4 text-[#D4A84B]" />
                   </button>
                 </div>
               </div>

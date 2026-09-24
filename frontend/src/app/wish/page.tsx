@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import confetti from "canvas-confetti";
-import { Heart, Send, CheckCircle2, ArrowLeft, Sparkles } from "lucide-react";
+import { Heart, Send, CheckCircle2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { submitStudentWish } from "../../lib/api";
 

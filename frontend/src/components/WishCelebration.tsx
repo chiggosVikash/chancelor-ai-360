@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Sparkles,
   QrCode,
   Heart,
   Send,
@@ -155,8 +154,8 @@ export const WishCelebration: React.FC<WishCelebrationProps> = ({
               disabled={isGeneratingPoem}
               className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#B8862C] to-[#D4A84B] hover:opacity-95 text-white font-ui font-semibold text-sm shadow-md active:scale-95 transition-all cursor-pointer"
             >
-              <Sparkles className="w-4 h-4" />
-              <span>{isGeneratingPoem ? "Synthesizing AI Poem..." : "✦ Synthesize Birthday Poem"}</span>
+              <BookOpen className="w-4 h-4" />
+              <span>{isGeneratingPoem ? "Composing Birthday Poem..." : "Compose Birthday Poem"}</span>
             </button>
 
             <button
@@ -324,7 +323,7 @@ export const WishCelebration: React.FC<WishCelebrationProps> = ({
 
               <div className="space-y-2">
                 <span className="px-3.5 py-1.5 rounded-full bg-[#FDF5E4] border border-[rgba(184,134,44,0.30)] text-[#B8862C] font-mono text-xs font-semibold inline-block">
-                  ✦ AI Synthesized Birthday Poem
+                  Tribute Poem &amp; Ode
                 </span>
                 <h3 className="font-display font-medium text-2xl sm:text-3xl text-[#1A1614]">
                   {poemData.title}

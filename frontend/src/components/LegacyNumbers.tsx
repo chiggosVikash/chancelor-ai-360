@@ -111,9 +111,10 @@ export const LegacyNumbers: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.5 }}
-            className="inline-block text-xs font-semibold font-ui tracking-[0.18em] uppercase text-[#B8862C] mb-3"
+            className="inline-flex items-center gap-2 text-xs font-semibold font-ui tracking-[0.18em] uppercase text-[#B8862C] mb-3"
           >
-            ✦ &nbsp;A Legacy in Numbers
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B8862C]" />
+            A Legacy in Numbers
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 12 }}

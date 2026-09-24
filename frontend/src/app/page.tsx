@@ -9,7 +9,7 @@ import { WishCelebration } from "../components/WishCelebration";
 import { Footer } from "../components/Footer";
 import { useSpeechSynthesis } from "../hooks/useSpeech";
 import { QRCodeSVG } from "qrcode.react";
-import { X, Sparkles, Heart } from "lucide-react";
+import { X, Heart } from "lucide-react";
 import { StudentWish, WS_BASE_URL, fetchWishes } from "../lib/api";
 
 const SEED_WISHES: StudentWish[] = [
@@ -165,8 +165,8 @@ export default function MasterStageExperience() {
             </button>
 
             <div className="space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#B8862C] font-ui flex items-center justify-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#B8862C] font-ui flex items-center justify-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B8862C]" />
                 Live Stage Submission
               </span>
               <h3 className="font-display font-semibold text-2xl text-[#1A1614]">

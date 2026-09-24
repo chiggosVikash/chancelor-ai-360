@@ -1,248 +1,379 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
-import { ChevronRight, ArrowDown, Award, GraduationCap, Globe2 } from "lucide-react";
+import gsap from "gsap";
+import { ArrowDown, ChevronRight, Award, GraduationCap, Globe, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 
+// [SOLID: SRP] — HeroSection presents the core tribute centerpiece, headline, and archival imagery
+// [PATTERN: Strategy] — Archival moment switcher allows viewing multiple uncropped historic interactions
 interface HeroSectionProps {
   onExploreJourney: () => void;
   onTalkToAI: () => void;
 }
 
-const FLOATING_BADGES = [
-  { icon: Award,          label: "NICE Co-Founder", sub: "1989",        delay: 0.2, pos: "top-[8%] right-[5%]",  dir: "float-badge"   },
-  { icon: GraduationCap,  label: "Shobhit University", sub: "Chancellor", delay: 0.5, pos: "top-[42%] left-[2%]", dir: "float-badge-2" },
-  { icon: Globe2,         label: "Global Educator",  sub: "35+ Years",  delay: 0.8, pos: "bottom-[12%] right-[4%]", dir: "float-badge-3" },
+interface ArchivalMoment {
+  id: string;
+  image: string;
+  title: string;
+  subtitle: string;
+  dignitary: string;
+  tag: string;
+}
+
+const ARCHIVAL_MOMENTS: ArchivalMoment[] = [
+  {
+    id: "modi",
+    image: "/photos/image1.jpeg",
+    title: "National Vision for Sustainable Development",
+    subtitle: "Presenting green vision & educational initiatives",
+    dignitary: "With Hon'ble Prime Minister Narendra Modi",
+    tag: "National Dialogue",
+  },
+  {
+    id: "kovind",
+    image: "/photos/image2.jpeg",
+    title: "Presidential Recognition for Academic Excellence",
+    subtitle: "Conferred national tribute for pioneering education",
+    dignitary: "With Hon'ble President of India Ram Nath Kovind",
+    tag: "Presidential Honor",
+  },
 ];
 
-/* stagger container */
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.6 },
-  },
-};
-const itemVariants = {
-  hidden: { opacity: 0, y: 18 },
-  show:   { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } },
-};
-
 export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreJourney, onTalkToAI }) => {
-  const shouldReduceMotion = useReducedMotion();
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [imageSrc, setImageSrc] = useState("/photos/image1.jpeg");
+  const [activeMomentIndex, setActiveMomentIndex] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
+  const titleLine1Ref = useRef<HTMLSpanElement>(null);
+  const titleLine2Ref = useRef<HTMLSpanElement>(null);
+  const preTitleRef = useRef<HTMLDivElement>(null);
+  const roleBadgeRef = useRef<HTMLDivElement>(null);
+  const narrativeRef = useRef<HTMLDivElement>(null);
+  const ctaGroupRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const imageCardRef = useRef<HTMLDivElement>(null);
+  const imageElementRef = useRef<HTMLDivElement>(null);
 
-  /* ── Subtle tilt on mouse move ──────────────────────────────── */
+  const activeMoment = ARCHIVAL_MOMENTS[activeMomentIndex];
+
+  // [GSAP: Cinematic Entrance Animation inspired by bellavita-site]
   useEffect(() => {
-    if (shouldReduceMotion) return;
-    const onMove = (e: MouseEvent) => {
-      const rect = heroRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const cx = rect.left + rect.width  / 2;
-      const cy = rect.top  + rect.height / 2;
-      setMousePos({
-        x: (e.clientX - cx) / (rect.width  / 2),
-        y: (e.clientY - cy) / (rect.height / 2),
-      });
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [shouldReduceMotion]);
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-  const tiltStyle = shouldReduceMotion ? {} : {
-    transform: `perspective(900px) rotateY(${mousePos.x * 5}deg) rotateX(${-mousePos.y * 4}deg) translateZ(8px)`,
+      // Staggered reveal of text and archival card
+      tl.fromTo(
+        preTitleRef.current,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.6, delay: 0.1 }
+      )
+        .fromTo(
+          [titleLine1Ref.current, titleLine2Ref.current],
+          { opacity: 0, y: 35, skewY: 1.5 },
+          { opacity: 1, y: 0, skewY: 0, duration: 0.8, stagger: 0.12 },
+          "-=0.3"
+        )
+        .fromTo(
+          roleBadgeRef.current,
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.5 },
+          "-=0.4"
+        )
+        .fromTo(
+          narrativeRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6 },
+          "-=0.3"
+        )
+        .fromTo(
+          ctaGroupRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6 },
+          "-=0.3"
+        )
+        .fromTo(
+          statsRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6 },
+          "-=0.3"
+        )
+        .fromTo(
+          imageCardRef.current,
+          { opacity: 0, scale: 0.96, y: 30 },
+          { opacity: 1, scale: 1, y: 0, duration: 1.0, ease: "power4.out" },
+          "-=0.9"
+        );
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Smooth image cross-fade when switching archival moments
+  const handleMomentSelect = (idx: number) => {
+    if (idx === activeMomentIndex) return;
+    if (imageElementRef.current) {
+      gsap.to(imageElementRef.current, {
+        opacity: 0,
+        scale: 0.98,
+        duration: 0.22,
+        ease: "power2.inOut",
+        onComplete: () => {
+          setActiveMomentIndex(idx);
+          gsap.to(imageElementRef.current, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.35,
+            ease: "power2.out",
+          });
+        },
+      });
+    } else {
+      setActiveMomentIndex(idx);
+    }
+  };
+
+  // Subtle interactive 3D tilt on mousemove
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!imageCardRef.current) return;
+    const rect = imageCardRef.current.getBoundingClientRect();
+    const x = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+    const y = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+
+    gsap.to(imageCardRef.current, {
+      rotateY: x * 4,
+      rotateX: -y * 3,
+      duration: 0.5,
+      ease: "power1.out",
+      transformPerspective: 1000,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (!imageCardRef.current) return;
+    gsap.to(imageCardRef.current, {
+      rotateY: 0,
+      rotateX: 0,
+      duration: 0.8,
+      ease: "power2.out",
+    });
   };
 
   return (
     <section
       id="heritage"
       ref={heroRef}
-      className="relative min-h-[92vh] flex items-center overflow-hidden section-bg-pattern"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative min-h-[94vh] pt-28 pb-16 sm:pb-24 flex items-center overflow-hidden section-bg-pattern"
     >
-      {/* ── Subtle background emblem watermark ──────────────────── */}
+      {/* Delicate background ambient gradient */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.025]"
-      >
-        <span
-          className="font-display font-black text-[30vw] text-[#1E2D5A] leading-none"
-          style={{ letterSpacing: "-0.04em" }}
-        >
-          SU
-        </span>
-      </div>
-
-      {/* ── Top golden rule ─────────────────────────────────────── */}
-      <div
-        aria-hidden="true"
-        className="absolute top-0 inset-x-0 h-[3px] bg-gradient-to-r from-transparent via-[#B8862C] to-transparent opacity-50"
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-gradient-to-tr from-[#B8862C]/5 via-[#1E2D5A]/4 to-transparent blur-[120px] pointer-events-none"
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full py-16 md:py-24">
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 w-full">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+          
+          {/* ── LEFT: Typography & Vision Narrative (7 cols) ── */}
+          <div className="lg:col-span-7 flex flex-col items-start gap-6 text-left">
+            
+            {/* Pre-title Chip — Modern, clean, NO star icons */}
+            <div ref={preTitleRef}>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[rgba(184,134,44,0.30)] shadow-xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B8862C]" />
+                <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#B8862C] font-ui">
+                  A Living Tribute · 35+ Years of Impact
+                </span>
+              </div>
+            </div>
 
-          {/* ── LEFT: Portrait ──────────────────────────────────── */}
-          <div className="flex justify-center md:justify-end order-first md:order-last">
-            <div className="relative">
-              {/* Floating achievement badges */}
-              {FLOATING_BADGES.map(({ icon: Icon, label, sub, delay, pos, dir }) => (
-                <motion.div
-                  key={label}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay, type: "spring" as const, stiffness: 400, damping: 20 }}
-                  className={cn(
-                    "absolute z-20 flex items-center gap-2 px-3 py-2 rounded-xl",
-                    "bg-white border border-[rgba(184,134,44,0.25)] shadow-md",
-                    "text-xs font-ui",
-                    dir, pos
-                  )}
-                  style={{ minWidth: 130 }}
-                >
-                  <div className="w-7 h-7 rounded-lg bg-[#FDF5E4] flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-3.5 h-3.5 text-[#B8862C]" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-[#1A1614] leading-tight" style={{ fontSize: 11 }}>{label}</div>
-                    <div className="text-[#8B7B6F]" style={{ fontSize: 10 }}>{sub}</div>
-                  </div>
-                </motion.div>
-              ))}
+            {/* Main Headline — Modern Outfit Display Typography */}
+            <div className="space-y-1">
+              <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-[#1A1614] leading-[1.08] tracking-tight">
+                <span ref={titleLine1Ref} className="block">
+                  Kunwar Shekhar
+                </span>
+                <span ref={titleLine2Ref} className="block gold-gradient-text">
+                  Vijendra
+                </span>
+              </h1>
+            </div>
 
-              {/* Portrait with tilt + gold frame */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9, x: 30 }}
-                animate={{ opacity: 1, scale: 1, x: 0 }}
-                transition={{ type: "spring" as const, stiffness: 200, damping: 22, delay: 0.3 }}
-                style={{ ...tiltStyle, transition: "transform 0.25s ease-out" }}
-                className="relative group"
+            {/* Role & Title Pill */}
+            <div ref={roleBadgeRef} className="flex flex-wrap items-center gap-2">
+              <div className="px-3.5 py-1.5 rounded-lg bg-[#1E2D5A]/[0.06] border border-[#1E2D5A]/15 text-[#1E2D5A] text-xs font-semibold uppercase tracking-[0.14em] font-ui">
+                Co-Founder &amp; Chancellor · Shobhit University
+              </div>
+              <div className="hidden sm:inline-block px-3 py-1.5 rounded-lg bg-[#FAF8F4] border border-[rgba(26,22,20,0.08)] text-[#8B7B6F] text-xs font-ui">
+                Thought Leader &amp; Educationist
+              </div>
+            </div>
+
+            {/* Editorial Tagline & Philosophy */}
+            <div ref={narrativeRef} className="space-y-2 max-w-xl">
+              <p className="font-display font-medium text-lg sm:text-xl text-[#2B231D] leading-snug">
+                “One person → many moments → one enduring legacy.”
+              </p>
+              <p className="text-sm sm:text-[15px] text-[#6E6053] font-ui leading-relaxed">
+                Celebrating a lifetime dedicated to bridging rural potential with global excellence.
+                Pioneering accessible higher education, integrative medicine, and ethical leadership across India.
+              </p>
+            </div>
+
+            {/* Call to Action Buttons — Modern, polished, NO star icons */}
+            <div ref={ctaGroupRef} className="flex flex-wrap items-center gap-3.5 pt-1">
+              <button
+                onClick={onExploreJourney}
+                id="hero-explore-journey-btn"
+                className="group flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#1E2D5A] hover:bg-[#2E4080] text-white font-semibold text-xs sm:text-sm font-ui tracking-wide transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
               >
-                {/* Outer glow */}
-                <div className="absolute -inset-5 bg-gradient-to-tr from-[#B8862C]/12 via-[#D4A84B]/6 to-transparent rounded-[36px] blur-2xl opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
+                <span>Explore His Journey</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </button>
 
-                {/* Gold frame */}
-                <div className="portrait-frame shadow-[0_24px_60px_-12px_rgba(26,22,20,0.18)] relative">
-                  <div className="relative w-64 h-80 sm:w-72 sm:h-92 md:w-80 md:h-[420px] rounded-[22px] overflow-hidden bg-[#F5F1EC]">
-                    <Image
-                      src={imageSrc}
-                      alt="Kunwar Shekhar Vijendra — Co-Founder & Chancellor, Shobhit University"
-                      fill
-                      priority
-                      sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, 320px"
-                      className="object-cover object-top group-hover:scale-[1.03] transition-transform duration-700 ease-out"
-                      onError={() => setImageSrc("/photos/image2.jpeg")}
-                    />
+              <button
+                onClick={onTalkToAI}
+                id="hero-talk-ai-btn"
+                className="flex items-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-[#FAF8F4] border border-[rgba(184,134,44,0.40)] text-[#996C18] hover:text-[#7A540E] font-semibold text-xs sm:text-sm font-ui tracking-wide transition-all duration-300 shadow-xs hover:shadow-sm active:scale-95"
+              >
+                <span>Talk to Chancellor AI</span>
+              </button>
+            </div>
 
-                    {/* Soft vignette bottom overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1A1614]/30 via-transparent to-transparent opacity-60" />
+            {/* Key Impact Stats Bar */}
+            <div
+              ref={statsRef}
+              className="w-full max-w-xl grid grid-cols-3 gap-4 pt-6 border-t border-[rgba(26,22,20,0.08)]"
+            >
+              <div>
+                <div className="font-display font-bold text-2xl sm:text-3xl text-[#1A1614] tracking-tight">
+                  35<span className="text-[#B8862C]">+</span>
+                </div>
+                <div className="text-[11px] text-[#8B7B6F] font-ui uppercase tracking-wider mt-0.5">
+                  Years of Service
+                </div>
+              </div>
 
-                    {/* Name ribbon at bottom */}
-                    <div className="absolute bottom-0 inset-x-0 px-4 py-3 bg-gradient-to-t from-[#1A1614]/70 to-transparent text-center">
-                      <span className="text-[10px] font-mono tracking-[0.18em] text-[#E8C96A] uppercase">
-                        Living Legacy · Portrait
-                      </span>
-                    </div>
+              <div>
+                <div className="font-display font-bold text-2xl sm:text-3xl text-[#1A1614] tracking-tight">
+                  50K<span className="text-[#B8862C]">+</span>
+                </div>
+                <div className="text-[11px] text-[#8B7B6F] font-ui uppercase tracking-wider mt-0.5">
+                  Global Alumni
+                </div>
+              </div>
+
+              <div>
+                <div className="font-display font-bold text-2xl sm:text-3xl text-[#1A1614] tracking-tight">
+                  2<span className="text-[#B8862C]"> Univ</span>
+                </div>
+                <div className="text-[11px] text-[#8B7B6F] font-ui uppercase tracking-wider mt-0.5">
+                  Meerut &amp; Gangoh
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* ── RIGHT: 100% UN増CROPPED Archival Showcase (5 cols) ── */}
+          <div className="lg:col-span-5 flex flex-col items-center justify-center">
+            
+            <div
+              ref={imageCardRef}
+              className="relative w-full max-w-md sm:max-w-lg lg:max-w-none group"
+            >
+              {/* Outer Golden Ambient Glow */}
+              <div className="absolute -inset-4 bg-gradient-to-tr from-[#B8862C]/20 via-[#D4A84B]/10 to-transparent rounded-[32px] blur-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+              {/* Master Archival Showcase Container */}
+              <div className="relative bg-white rounded-3xl p-3 sm:p-4 border border-[rgba(184,134,44,0.30)] shadow-[0_20px_50px_-12px_rgba(26,22,20,0.14)]">
+                
+                {/* 100% UNCROPPED 3:2 Historic Photo Frame */}
+                {/* [DRY] — Exact 3:2 aspect ratio ensures Prime Minister Modi & President Kovind are NEVER cropped */}
+                <div
+                  ref={imageElementRef}
+                  className="relative w-full aspect-[3/2] rounded-2xl overflow-hidden bg-[#1A1614]/5 shadow-inner"
+                >
+                  <Image
+                    src={activeMoment.image}
+                    alt={`${activeMoment.title} — ${activeMoment.dignitary}`}
+                    fill
+                    priority
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 520px"
+                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                  />
+
+                  {/* Top-Right Moment Badge */}
+                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-[#1A1614]/80 backdrop-blur-md text-[10px] font-mono text-white/95 uppercase tracking-wider border border-white/10">
+                    {activeMoment.tag}
                   </div>
                 </div>
 
-                {/* Birthday badge pinned bottom-left of portrait */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.85 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ delay: 1.4, type: "spring" as const, stiffness: 400, damping: 18 }}
-                  className="absolute -bottom-4 -left-6 bg-gradient-to-br from-[#1E2D5A] to-[#2E4080] text-white px-4 py-2.5 rounded-2xl shadow-lg text-xs font-ui font-semibold flex items-center gap-2"
-                >
-                  🎂 <span>Happy Birthday, Sir!</span>
-                </motion.div>
-              </motion.div>
-            </div>
-          </div>
+                {/* Dignitary & Moment Caption Bar */}
+                <div className="mt-3.5 px-2 pb-1 space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-semibold text-[#1A1614] font-ui line-clamp-1">
+                      {activeMoment.dignitary}
+                    </span>
+                    <span className="text-[10px] font-mono text-[#B8862C] uppercase tracking-wider whitespace-nowrap">
+                      {activeMomentIndex === 0 ? "01 / 02" : "02 / 02"}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#8B7B6F] font-ui line-clamp-1">
+                    {activeMoment.title}
+                  </p>
+                </div>
 
-          {/* ── RIGHT: Text Content ──────────────────────────────── */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            className="flex flex-col items-start gap-5 text-left order-last md:order-first"
-          >
-            {/* Pre-title chip */}
-            <motion.div variants={itemVariants}>
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold font-ui bg-[#FDF5E4] text-[#B8862C] border border-[rgba(184,134,44,0.30)] tracking-wide">
-                ✦ &nbsp;Shobhit University Presents
-              </span>
-            </motion.div>
+                {/* Moment Switcher Tabs */}
+                <div className="mt-3 pt-3 border-t border-[rgba(26,22,20,0.06)] grid grid-cols-2 gap-2">
+                  {ARCHIVAL_MOMENTS.map((moment, idx) => {
+                    const isSelected = idx === activeMomentIndex;
+                    return (
+                      <button
+                        key={moment.id}
+                        onClick={() => handleMomentSelect(idx)}
+                        className={cn(
+                          "px-2.5 py-2 rounded-xl text-left transition-all duration-200 text-xs font-ui flex items-center justify-between",
+                          isSelected
+                            ? "bg-[#1E2D5A] text-white shadow-xs font-medium"
+                            : "bg-[#FAF8F4] text-[#4A3F35] hover:bg-[#F0ECE4]"
+                        )}
+                      >
+                        <span className="truncate">
+                          {idx === 0 ? "With PM Modi" : "With Pres. Kovind"}
+                        </span>
+                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-[#E4C98A] flex-shrink-0 ml-1" />}
+                      </button>
+                    );
+                  })}
+                </div>
 
-            {/* Main name */}
-            <motion.div variants={itemVariants} className="space-y-1">
-              <h1 className="font-display font-semibold text-4xl sm:text-5xl lg:text-6xl text-[#1A1614] leading-tight tracking-tight">
-                Kunwar<br />
-                <span className="gold-gradient-text">Shekhar</span><br />
-                Vijendra
-              </h1>
-            </motion.div>
-
-            {/* Title badge */}
-            <motion.div variants={itemVariants}>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1E2D5A]/8 border border-[#1E2D5A]/15 text-[#1E2D5A] text-xs font-semibold uppercase tracking-[0.18em] font-ui">
-                Co-Founder &amp; Chancellor · Shobhit University
               </div>
-            </motion.div>
 
-            {/* Tagline */}
-            <motion.div variants={itemVariants}>
-              <p className="text-base sm:text-lg text-[#4A3F35] font-display leading-relaxed max-w-md">
-                "One person → many moments → one legacy."
-              </p>
-              <p className="mt-2 text-sm text-[#8B7B6F] font-ui leading-relaxed max-w-sm">
-                A digital journey celebrating 35+ years of visionary leadership, transformative education, and rural empowerment across India.
-              </p>
-            </motion.div>
+              {/* Verified Tribute Stamp pinned bottom-right */}
+              <div className="absolute -bottom-3 -right-3 hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[rgba(184,134,44,0.30)] shadow-md text-[10px] font-mono text-[#8B7B6F]">
+                <Award className="w-3.5 h-3.5 text-[#B8862C]" />
+                <span>Historic Archive</span>
+              </div>
 
-            {/* CTAs */}
-            <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-3 pt-2">
-              <motion.button
-                whileHover={{ scale: 1.03, y: -1 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring" as const, stiffness: 500, damping: 30 }}
-                onClick={onExploreJourney}
-                id="hero-explore-journey-btn"
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1E2D5A] hover:bg-[#2E4080] text-white font-semibold text-sm font-ui transition-colors shadow-md"
-              >
-                Explore His Journey
-                <ChevronRight className="w-4 h-4" />
-              </motion.button>
+            </div>
 
-              <motion.button
-                whileHover={{ scale: 1.03, y: -1 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring" as const, stiffness: 500, damping: 30 }}
-                onClick={onTalkToAI}
-                id="hero-talk-ai-btn"
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-transparent border-2 border-[#B8862C] text-[#B8862C] hover:bg-[#FDF5E4] font-semibold text-sm font-ui transition-all"
-              >
-                ✦ Talk to Chancellor AI
-              </motion.button>
-            </motion.div>
-
-            {/* Scroll hint */}
-            <motion.a
-              variants={itemVariants}
-              href="#journey"
-              className="flex items-center gap-1.5 text-xs font-mono text-[#8B7B6F] hover:text-[#B8862C] transition-colors mt-2"
-            >
-              <span>Scroll to explore</span>
-              <ArrowDown className="w-3 h-3 animate-bounce" />
-            </motion.a>
-          </motion.div>
+          </div>
 
         </div>
       </div>
 
-      {/* ── Bottom section divider ───────────────────────────────── */}
-      <div className="absolute bottom-0 inset-x-0 section-divider" />
+      {/* Subtle bottom scroll prompt */}
+      <div className="absolute bottom-4 inset-x-0 flex justify-center pointer-events-none">
+        <a
+          href="#journey"
+          className="pointer-events-auto flex items-center gap-1.5 text-[11px] font-mono tracking-wider uppercase text-[#8B7B6F] hover:text-[#B8862C] transition-colors"
+        >
+          <span>Explore Timeline</span>
+          <ArrowDown className="w-3 h-3 animate-bounce" />
+        </a>
+      </div>
     </section>
   );
 };
+

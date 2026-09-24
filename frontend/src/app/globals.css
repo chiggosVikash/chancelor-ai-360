@@ -29,19 +29,21 @@ html { scroll-behavior: smooth; }
 body {
   background-color: var(--bg-canvas);
   color: var(--text-primary);
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* ─── Typography ────────────────────────────────────────────── */
+/* [SOLID: OCP] — Modern typography tokens open to styling extensions */
 .font-display {
-  font-family: var(--font-cormorant), 'Playfair Display', Georgia, serif;
+  font-family: var(--font-outfit), system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 .font-ui {
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
 }
 
 /* ─── Gold Text ─────────────────────────────────────────────── */
