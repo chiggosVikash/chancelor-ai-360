@@ -1,11 +1,33 @@
 "use client";
-import { TurnstileWidget } from "../../components/TurnstileWidget";
-import React, { useState } from "react";
-import confetti from "canvas-confetti";
-import { Heart, Send, CheckCircle2, ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { submitStudentWish } from "../../lib/api";
 
+import React, { useState } from "react";
+import Link from "next/link";
+import confetti from "canvas-confetti";
+import { Heart, Send, CheckCircle2, ArrowLeft, Sparkles, User, GraduationCap, MessageSquareHeart } from "lucide-react";
+
+import { submitStudentWish } from "@/lib/api";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+// [SOLID: SRP] — Predefined university departments and curated tribute templates
 const DEPARTMENTS = [
   "B.Tech Computer Science & AI",
   "Biotechnology & Bioinformatics",
@@ -15,25 +37,26 @@ const DEPARTMENTS = [
   "Management & Business Studies",
   "Biomedical Engineering",
   "Faculty / University Staff Member",
-  "Alumni / Well-Wisher"
+  "Alumni / Well-Wisher",
 ];
 
 const SAMPLE_WISHES = [
   "Wishing our visionary Chancellor Sir a blessed and glorious birthday! Thank you for inspiring us.",
   "Happy Birthday Sir! Your dedication to value-based education and research guides us every day.",
   "Heartfelt birthday greetings to Chancellor Kunwar Shekhar Vijendra! May you be blessed with longevity and health.",
-  "Happy Birthday Sir! Thank you for bringing world-class laboratories and education to our region."
+  "Happy Birthday Sir! Thank you for bringing world-class laboratories and education to our region.",
 ];
 
-const AVATAR_COLORS = ["#C9A45C", "#E4C98A", "#8B7340", "#6E695F", "#9B7A38"];
+const AVATAR_COLORS = ["#B8862C", "#D4A84B", "#1E2D5A", "#8B7340", "#6E695F"];
 
+// [SOLID: SRP] — WishPortalPage manages student tribute submission, validation, and celebratory feedback
 export default function WishPortalPage() {
   const [name, setName] = useState("");
   const [department, setDepartment] = useState(DEPARTMENTS[0]);
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [selectedColor, setSelectedColor] = useState(AVATAR_COLORS[0]);
+  const [selectedColor] = useState(AVATAR_COLORS[0]);
   const [turnstileToken, setTurnstileToken] = useState<string>("default_pass_token");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,10 +75,10 @@ export default function WishPortalPage() {
 
       setIsSuccess(true);
       confetti({
-        particleCount: 50,
-        spread: 60,
+        particleCount: 65,
+        spread: 70,
         origin: { y: 0.6 },
-        colors: ["#C9A45C", "#E4C98A", "#F5F2EA"],
+        colors: ["#B8862C", "#D4A84B", "#1E2D5A", "#FDF5E4"],
       });
     } catch (err) {
       console.error(err);
@@ -72,141 +95,180 @@ export default function WishPortalPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0B0B0A] text-[#F5F2EA] p-4 sm:p-6 flex flex-col justify-between max-w-lg mx-auto">
-      {/* Brand Header */}
-      <div className="pt-6 pb-4 text-center space-y-2">
-        <span className="text-[10px] font-mono tracking-[0.25em] text-[#C9A45C] uppercase">
-          Shobhit University Tribute
-        </span>
-        <h1 className="font-display font-medium text-2xl sm:text-3xl text-[#F5F2EA] tracking-wide">
-          SEND BIRTHDAY WISHES
-        </h1>
-        <p className="text-xs font-mono text-[#E4C98A]">
-          Hon&apos;ble Chancellor Kunwar Shekhar Vijendra
-        </p>
-      </div>
+    <main className="min-h-screen bg-[#FAF8F4] text-[#1A1614] p-4 sm:p-6 flex flex-col justify-between max-w-lg mx-auto relative selection:bg-[#B8862C]/20">
+      {/* Ambient background radiant glow */}
+      <div 
+        className="pointer-events-none absolute inset-x-0 -top-20 h-72 opacity-60"
+        style={{
+          background: "radial-gradient(circle at 50% 0%, rgba(184, 134, 44, 0.15) 0%, transparent 70%)"
+        }}
+        aria-hidden="true"
+      />
 
-      {/* Main Form Card */}
-      <div className="heritage-card rounded-3xl p-6 sm:p-8 border border-white/10 relative shadow-2xl">
+      {/* Top Navigation & Brand Header */}
+      <header className="pt-4 pb-5 text-center space-y-3 relative z-10">
+        <div className="flex items-center justify-between mb-2">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs text-[#8B7B6F] hover:text-[#1E2D5A] font-ui font-medium transition-colors py-1 px-2.5 rounded-full hover:bg-stone-200/50"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Presentation</span>
+          </Link>
+          <Badge variant="gold" className="text-[10px] tracking-wider uppercase font-mono py-0.5 px-2.5">
+            Live Tribute
+          </Badge>
+        </div>
+
+        <div className="space-y-1.5">
+          <span className="text-[11px] font-mono tracking-[0.25em] text-[#B8862C] uppercase font-semibold block">
+            Shobhit University Tribute
+          </span>
+          <h1 className="font-display font-bold text-2xl sm:text-3xl text-[#1E2D5A] tracking-tight">
+            Send Birthday Wishes
+          </h1>
+          <p className="text-xs sm:text-sm font-ui text-[#4A3F35] flex items-center justify-center gap-1.5">
+            <Heart className="w-3.5 h-3.5 text-[#B8862C] fill-[#B8862C]" />
+            <span>Hon&apos;ble Chancellor Kunwar Shekhar Vijendra</span>
+          </p>
+        </div>
+      </header>
+
+      {/* Main Form Card using Shadcn UI Card */}
+      <Card className="rounded-3xl border border-[rgba(184,134,44,0.22)] bg-white/95 shadow-xl shadow-stone-900/5 backdrop-blur-sm relative z-10">
         {isSuccess ? (
-          <div className="py-10 text-center space-y-5">
-            <div className="w-14 h-14 mx-auto rounded-full bg-[#1c1a17] text-[#C9A45C] flex items-center justify-center border border-[#C9A45C]/30">
-              <CheckCircle2 className="w-7 h-7" />
+          <CardContent className="py-10 text-center space-y-5">
+            <div className="w-16 h-16 mx-auto rounded-full bg-[#FDF5E4] text-[#B8862C] flex items-center justify-center border border-[#B8862C]/30 shadow-xs">
+              <CheckCircle2 className="w-8 h-8 text-[#B8862C]" />
             </div>
-            <div className="space-y-1">
-              <h2 className="font-display font-medium text-2xl text-[#F5F2EA]">Thank You, {name}</h2>
-              <p className="text-xs text-[#9B968B] max-w-xs mx-auto font-ui leading-relaxed">
-                Your birthday tribute has been broadcast live to the main auditorium screen.
+            <div className="space-y-2">
+              <h2 className="font-display font-bold text-2xl text-[#1E2D5A]">
+                Thank You, {name}!
+              </h2>
+              <p className="text-xs text-[#8B7B6F] max-w-xs mx-auto font-ui leading-relaxed">
+                Your birthday tribute has been broadcast live to the main auditorium presentation screen.
               </p>
             </div>
-            <div className="pt-4 space-y-2">
-              <button
+            <div className="pt-4 space-y-2.5">
+              <Button
                 onClick={handleReset}
-                className="w-full py-3 rounded-full bg-[#C9A45C] hover:bg-[#E4C98A] text-[#0B0B0A] font-ui text-xs font-semibold tracking-wider transition-all"
+                variant="gold"
+                className="w-full text-xs font-semibold tracking-wider uppercase h-11"
               >
                 Send Another Wish
-              </button>
-              <Link
-                href="/"
-                className="block text-xs text-[#9B968B] hover:text-[#E4C98A] transition-colors pt-2 font-mono"
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                className="w-full text-xs text-[#8B7B6F] hover:text-[#1E2D5A] font-ui h-9"
               >
-                View Chancellor AI 360 Presentation →
-              </Link>
+                <Link href="/">
+                  View Chancellor AI 360 Presentation →
+                </Link>
+              </Button>
             </div>
-          </div>
+          </CardContent>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Student Name */}
-            <div>
-              <label htmlFor="student-name-input" className="block text-xs font-mono text-[#9B968B] mb-1.5 uppercase tracking-wider">
-                Your Full Name <span className="text-[#C9A45C]">*</span>
-              </label>
-              <input
-                id="student-name-input"
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Aarav Sharma"
-                className="w-full bg-[#0e0e0d] border border-white/10 focus:border-[#C9A45C]/60 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-[#F5F2EA] placeholder-[#9B968B]/50 focus:outline-none transition-all font-ui"
-              />
-            </div>
-
-            {/* Department */}
-            <div>
-              <label htmlFor="department-select" className="block text-xs font-mono text-[#9B968B] mb-1.5 uppercase tracking-wider">
-                Faculty / Affiliation
-              </label>
-              <select
-                id="department-select"
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-                className="w-full bg-[#0e0e0d] border border-white/10 focus:border-[#C9A45C]/60 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-[#F5F2EA] focus:outline-none transition-all font-ui"
-              >
-                {DEPARTMENTS.map((dept) => (
-                  <option key={dept} value={dept} className="bg-[#121210] text-[#F5F2EA]">
-                    {dept}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Tribute Message */}
-            <div>
-              <label htmlFor="wish-message-input" className="block text-xs font-mono text-[#9B968B] mb-1.5 uppercase tracking-wider">
-                Your Birthday Tribute <span className="text-[#C9A45C]">*</span>
-              </label>
-              <textarea
-                id="wish-message-input"
-                required
-                rows={4}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Share your appreciation, gratitude, or prayers for Chancellor Sir..."
-                className="w-full bg-[#0e0e0d] border border-white/10 focus:border-[#C9A45C]/60 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-[#F5F2EA] placeholder-[#9B968B]/50 focus:outline-none transition-all font-ui resize-none"
-              />
-            </div>
-
-            {/* Quick Templates */}
-            <div>
-              <span className="block text-[10px] font-mono text-[#9B968B] mb-1.5 uppercase tracking-wider">
-                Quick Appreciation Taps:
-              </span>
+          <CardContent className="p-6 sm:p-8">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Student Name */}
               <div className="space-y-1.5">
-                {SAMPLE_WISHES.map((sample, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setMessage(sample)}
-                    className="w-full text-left text-[11px] p-2 rounded-lg bg-[#0e0e0d] hover:bg-[#1c1a17] border border-white/5 hover:border-[#C9A45C]/30 text-[#9B968B] hover:text-[#E4C98A] transition-all line-clamp-1 font-ui"
-                  >
-                    &ldquo;{sample}&rdquo;
-                  </button>
-                ))}
+                <Label htmlFor="student-name-input" className="flex items-center gap-1.5 text-[#4A3F35]">
+                  <User className="w-3.5 h-3.5 text-[#B8862C]" />
+                  <span>Your Full Name <span className="text-[#B8862C]">*</span></span>
+                </Label>
+                <Input
+                  id="student-name-input"
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Aarav Sharma"
+                  className="bg-stone-50/50 hover:bg-white focus:bg-white border-stone-200 focus-visible:ring-[#B8862C] focus-visible:border-[#B8862C] text-[#1A1614] placeholder:text-[#8B7B6F]/60"
+                />
               </div>
-            </div>
 
-            {/* Cloudflare Turnstile Human Verification */}
-            <TurnstileWidget onVerify={(tok) => setTurnstileToken(tok)} theme="dark" />
+              {/* Department / Affiliation via Shadcn Select */}
+              <div className="space-y-1.5">
+                <Label htmlFor="department-select" className="flex items-center gap-1.5 text-[#4A3F35]">
+                  <GraduationCap className="w-3.5 h-3.5 text-[#B8862C]" />
+                  <span>Faculty / Affiliation</span>
+                </Label>
+                <Select value={department} onValueChange={(val) => setDepartment(val)}>
+                  <SelectTrigger id="department-select" className="bg-stone-50/50 hover:bg-white focus:bg-white border-stone-200">
+                    <SelectValue placeholder="Select faculty / affiliation" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DEPARTMENTS.map((dept) => (
+                      <SelectItem key={dept} value={dept}>
+                        {dept}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-            {/* Submit Button */}
-            <button
-              id="submit-wish-btn"
-              type="submit"
-              disabled={isSubmitting || !name.trim() || !message.trim()}
-              className="w-full py-3.5 rounded-full bg-[#C9A45C] hover:bg-[#E4C98A] disabled:opacity-30 text-[#0B0B0A] font-ui font-semibold text-xs tracking-widest uppercase transition-all shadow-lg active:scale-95 flex items-center justify-center space-x-2 cursor-pointer mt-2"
-            >
-              <Send className="w-3.5 h-3.5" />
-              <span>{isSubmitting ? "Broadcasting..." : "Broadcast Birthday Tribute"}</span>
-            </button>
-          </form>
+              {/* Tribute Message */}
+              <div className="space-y-1.5">
+                <Label htmlFor="wish-message-input" className="flex items-center gap-1.5 text-[#4A3F35]">
+                  <MessageSquareHeart className="w-3.5 h-3.5 text-[#B8862C]" />
+                  <span>Your Birthday Tribute <span className="text-[#B8862C]">*</span></span>
+                </Label>
+                <Textarea
+                  id="wish-message-input"
+                  required
+                  rows={4}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Share your appreciation, gratitude, or prayers for Chancellor Sir..."
+                  className="bg-stone-50/50 hover:bg-white focus:bg-white border-stone-200 focus-visible:ring-[#B8862C] focus-visible:border-[#B8862C] text-[#1A1614] placeholder:text-[#8B7B6F]/60 resize-none min-h-[105px]"
+                />
+              </div>
+
+              {/* Quick Appreciation Tap Pills */}
+              <div className="space-y-2 pt-1">
+                <span className="flex items-center gap-1.5 text-[11px] font-mono text-[#8B7B6F] uppercase tracking-wider">
+                  <Sparkles className="w-3 h-3 text-[#B8862C]" />
+                  <span>Quick Appreciation Taps:</span>
+                </span>
+                <div className="grid grid-cols-1 gap-1.5">
+                  {SAMPLE_WISHES.map((sample, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setMessage(sample)}
+                      className="w-full text-left text-xs p-2.5 rounded-xl bg-[#FDF5E4]/80 hover:bg-[#FDF5E4] border border-[rgba(184,134,44,0.2)] hover:border-[#B8862C]/40 text-[#4A3F35] hover:text-[#1A1614] transition-all line-clamp-1 font-ui cursor-pointer shadow-2xs active:scale-[0.99]"
+                    >
+                      &ldquo;{sample}&rdquo;
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Cloudflare Turnstile Verification in Light Theme */}
+              <div className="pt-1">
+                <TurnstileWidget onVerify={(tok) => setTurnstileToken(tok)} theme="light" />
+              </div>
+
+              {/* Submit Button using Shadcn Button */}
+              <Button
+                id="submit-wish-btn"
+                type="submit"
+                disabled={isSubmitting || !name.trim() || !message.trim()}
+                className="w-full h-12 rounded-xl bg-[#1E2D5A] hover:bg-[#2E4080] text-white font-ui font-semibold text-xs sm:text-sm tracking-wider uppercase transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer mt-2"
+              >
+                <Send className="w-4 h-4" />
+                <span>{isSubmitting ? "Broadcasting..." : "Broadcast Birthday Tribute"}</span>
+              </Button>
+            </form>
+          </CardContent>
         )}
-      </div>
+      </Card>
 
-      {/* Footer */}
-      <div className="py-4 text-center text-[10px] font-mono text-[#9B968B]/60">
+      {/* Portal Footer */}
+      <footer className="py-4 text-center text-[11px] font-mono text-[#8B7B6F] relative z-10">
         Shobhit University • Chancellor AI 360 Tribute Portal
-      </div>
+      </footer>
     </main>
   );
 }
