@@ -79,9 +79,10 @@ async def submit_wish(wish: StudentWish):
 
 @app.post("/api/tribute/generate", response_model=BirthdayTributeResponse)
 async def generate_tribute(req: TributeGenerationRequest):
-    wishes = wish_manager.get_all_wishes()
-    if req.filter_department:
-        wishes = [w for w in wishes if req.filter_department.lower() in w.department.lower()]
+    wishes = wish_manager.get_wishes_in_window(
+        since_epoch=req.since_timestamp,
+        filter_department=req.filter_department
+    )
     return await ai_service.generate_birthday_tribute(wishes=wishes, language=req.language)
 
 @app.websocket("/ws/wishes")

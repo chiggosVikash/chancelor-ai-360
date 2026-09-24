@@ -76,11 +76,14 @@ export async function submitStudentWish(wish: Omit<StudentWish, "id" | "timestam
   return res.json();
 }
 
-export async function generateBirthdayTribute(): Promise<BirthdayTributeResponse> {
+export async function generateBirthdayTribute(sinceTimestamp?: number): Promise<BirthdayTributeResponse> {
   const res = await fetch(`${API_BASE_URL}/api/tribute/generate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ language: "bilingual" }),
+    body: JSON.stringify({ 
+      language: "bilingual",
+      since_timestamp: sinceTimestamp 
+    }),
   });
   if (!res.ok) throw new Error("Failed to generate tribute poem");
   return res.json();

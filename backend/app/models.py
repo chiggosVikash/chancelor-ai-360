@@ -11,6 +11,7 @@ class StudentWish(BaseModel):
     message: str = Field(..., description="Heartfelt birthday message")
     timestamp: Optional[str] = Field(default_factory=lambda: datetime.now().strftime("%I:%M %p"), description="Formatted timestamp")
     avatar_color: Optional[str] = Field(default="#F59E0B", description="Hex color for avatar badge")
+    created_at: Optional[float] = Field(default_factory=lambda: datetime.now().timestamp(), description="Epoch timestamp in seconds")
 
 class Milestone(BaseModel):
     id: str = Field(..., description="Unique identifier for milestone")
@@ -34,6 +35,7 @@ class ChatResponse(BaseModel):
 class TributeGenerationRequest(BaseModel):
     filter_department: Optional[str] = Field(default=None, description="Optional department filter")
     language: str = Field(default="bilingual", description="english, hindi, or bilingual celebration")
+    since_timestamp: Optional[float] = Field(default=None, description="Epoch timestamp or window start time to filter wishes")
 
 class BirthdayTributeResponse(BaseModel):
     title: str = Field(..., description="Title of the tribute poem/anthem")
