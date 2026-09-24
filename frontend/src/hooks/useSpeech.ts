@@ -2,6 +2,33 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { API_BASE_URL } from "../lib/api";
 
+// Global singleton audio controller across the entire app
+let globalAudio: HTMLAudioElement | null = null;
+let currentObjectUrl: string | null = null;
+const playbackListeners = new Set<(playing: boolean) => void>();
+
+function notifyPlaybackState(playing: boolean) {
+  playbackListeners.forEach((fn) => fn(playing));
+}
+
+export function stopAllSpeech() {
+  if (typeof window !== "undefined") {
+    if (globalAudio) {
+      globalAudio.pause();
+      globalAudio.currentTime = 0;
+      globalAudio.src = "";
+    }
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    notifyPlaybackState(false);
+  }
+}
+
 export function useSpeechRecognition(onResult?: (transcript: string) => void) {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -71,48 +98,47 @@ export function useSpeechRecognition(onResult?: (transcript: string) => void) {
 export function useSpeechSynthesis() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isEnabled, setIsEnabled] = useState(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize persistent Audio object
+  // Sync with global playback state
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      audioRef.current = new Audio();
-      const a = audioRef.current;
-      a.onended = () => setIsSpeaking(false);
-      a.onerror = () => setIsSpeaking(false);
-      a.onpause = () => setIsSpeaking(false);
-    }
+    const listener = (playing: boolean) => setIsSpeaking(playing);
+    playbackListeners.add(listener);
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = "";
-      }
+      playbackListeners.delete(listener);
     };
   }, []);
 
-  // Fallback to browser Web Speech API if backend TTS unreachable
+  // Guaranteed single-voice fallback to Web Speech API
   const fallbackBrowserSpeech = useCallback((text: string) => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
+    stopAllSpeech();
+
     const cleanText = text.replace(/[*_#`[\]()]/g, "");
     const utterance = new SpeechSynthesisUtterance(cleanText);
     utterance.rate = 0.95;
     utterance.pitch = 1.05;
 
     const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(
-      (v) =>
-        (v.lang.includes("en-IN") || v.lang.includes("hi-IN") || v.name.includes("Google") || v.name.includes("Natural")) &&
-        (v.name.includes("Female") || v.name.includes("Neerja") || v.name.includes("Sangeeta") || v.name.includes("Samantha"))
-    ) || voices.find((v) => v.lang.includes("en-IN"));
+    const preferredVoice =
+      voices.find(
+        (v) =>
+          (v.lang.includes("en-IN") ||
+            v.lang.includes("hi-IN") ||
+            v.name.includes("Google") ||
+            v.name.includes("Natural")) &&
+          (v.name.includes("Female") ||
+            v.name.includes("Neerja") ||
+            v.name.includes("Sangeeta") ||
+            v.name.includes("Samantha"))
+      ) || voices.find((v) => v.lang.includes("en-IN"));
 
     if (preferredVoice) {
       utterance.voice = preferredVoice;
     }
 
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+    utterance.onstart = () => notifyPlaybackState(true);
+    utterance.onend = () => notifyPlaybackState(false);
+    utterance.onerror = () => notifyPlaybackState(false);
     window.speechSynthesis.speak(utterance);
   }, []);
 
@@ -122,47 +148,66 @@ export function useSpeechSynthesis() {
         return;
       }
 
-      // Stop any current playback
-      stop();
+      // Stop any active speech before starting a new one
+      stopAllSpeech();
+
+      const cleanText = text.replace(/[*_#`[\]()]/g, "").trim();
 
       try {
-        const audio = audioRef.current;
-        if (!audio) throw new Error("Audio object not ready");
+        // Fetch neural audio via POST to prevent query string truncation
+        const resp = await fetch(`${API_BASE_URL}/api/tts`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: cleanText,
+            voice: "en-IN-NeerjaNeural",
+          }),
+        });
 
-        // Use backend neural voice stream (en-IN-NeerjaNeural female voice)
-        const ttsUrl = `${API_BASE_URL}/api/tts?text=${encodeURIComponent(text.trim())}`;
-        audio.src = ttsUrl;
-        audio.playbackRate = 1.0;
+        if (!resp.ok) {
+          throw new Error(`TTS server responded with ${resp.status}`);
+        }
 
-        setIsSpeaking(true);
-        await audio.play();
+        const blob = await resp.blob();
+        if (blob.size === 0) {
+          throw new Error("Empty audio response");
+        }
+
+        if (!globalAudio) {
+          globalAudio = new Audio();
+          globalAudio.onended = () => notifyPlaybackState(false);
+          globalAudio.onerror = () => notifyPlaybackState(false);
+          globalAudio.onpause = () => notifyPlaybackState(false);
+        }
+
+        if (currentObjectUrl) {
+          URL.revokeObjectURL(currentObjectUrl);
+        }
+
+        currentObjectUrl = URL.createObjectURL(blob);
+        globalAudio.src = currentObjectUrl;
+        globalAudio.playbackRate = 1.0;
+
+        notifyPlaybackState(true);
+        await globalAudio.play();
       } catch (err) {
-        console.warn("Neural audio streaming failed, using browser speech fallback:", err);
-        fallbackBrowserSpeech(text);
+        console.warn("Neural audio failed, using browser speech fallback:", err);
+        fallbackBrowserSpeech(cleanText);
       }
     },
     [isEnabled, fallbackBrowserSpeech]
   );
 
   const stop = useCallback(() => {
-    if (typeof window !== "undefined") {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
-      setIsSpeaking(false);
-    }
+    stopAllSpeech();
   }, []);
 
   const toggleVoice = useCallback(() => {
     setIsEnabled((prev) => {
-      if (prev) stop();
+      if (prev) stopAllSpeech();
       return !prev;
     });
-  }, [stop]);
+  }, []);
 
   return { speak, stop, isSpeaking, isEnabled, toggleVoice };
 }

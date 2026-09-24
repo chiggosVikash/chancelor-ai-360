@@ -273,7 +273,7 @@ Instructions:
                         text = resp.json()["choices"][0]["message"]["content"].strip()
                         stanzas = [s.strip() for s in text.split("\n\n") if s.strip()]
                         if len(stanzas) >= 3:
-                            recitation = " ".join(stanzas[:2])
+                            recitation = "\n\n".join(stanzas)
                             return BirthdayTributeResponse(
                                 title="A Living Legacy: Birthday Ode to Kunwar Shekhar Vijendra",
                                 theme="Gandhian Leadership, 35 Years of Educational Pioneering & Rural Transformation",
@@ -294,12 +294,7 @@ Instructions:
             "Happy Birthday, Chancellor Sir, with hearts aglow!\nMay peace and boundless blessings round you flow.\nFor thirty-five proud years of selfless art,\nWe offer gratitude from every student's heart."
         ]
 
-        recitation = (
-            "From Gangoh's soil to Meerut's campus wide, since eighty-nine, you walked with truth as guide. "
-            "A Gandhian heart with vision bright and pure, you built the halls where ethics will endure. "
-            "On this auspicious birthday celebration, Shobhit University honors you, Chancellor Sir. "
-            "May peace, health, and boundless grace illuminate your path ahead."
-        )
+        recitation = "\n\n".join(stanzas)
 
         return BirthdayTributeResponse(
             title="A Living Legacy: Birthday Ode to Kunwar Shekhar Vijendra",
