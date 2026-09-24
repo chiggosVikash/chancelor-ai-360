@@ -62,7 +62,8 @@ export const WishCelebration: React.FC<WishCelebrationProps> = ({
 
   // Real-Time Incoming Toast Queue (max 3 visible)
   const [toasts, setToasts] = useState<LiveToast[]>([]);
-  const knownWishIds = useRef<Set<string>>(new Set(wishes.map((w) => w.id)));
+  const isInitialLoadRef = useRef(true);
+  const knownWishIds = useRef<Set<string>>(new Set());
   const windowStartTimeRef = useRef<number | null>(null);
   windowStartTimeRef.current = windowStartTime;
 
@@ -79,6 +80,15 @@ export const WishCelebration: React.FC<WishCelebrationProps> = ({
 
   // Watch for new wishes coming in via WebSocket or user submission
   useEffect(() => {
+    // Silently ingest initial/database wishes on startup so zero toasts pop up on load
+    if (isInitialLoadRef.current) {
+      wishes.forEach((w) => knownWishIds.current.add(w.id));
+      const settleTimer = setTimeout(() => {
+        isInitialLoadRef.current = false;
+      }, 1200);
+      return () => clearTimeout(settleTimer);
+    }
+
     const currentIds = knownWishIds.current;
     const incomingNewWishes: StudentWish[] = [];
 
