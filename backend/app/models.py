@@ -12,6 +12,7 @@ class StudentWish(BaseModel):
     timestamp: Optional[str] = Field(default_factory=lambda: datetime.now().strftime("%I:%M %p"), description="Formatted timestamp")
     avatar_color: Optional[str] = Field(default="#F59E0B", description="Hex color for avatar badge")
     created_at: Optional[float] = Field(default_factory=lambda: datetime.now().timestamp(), description="Epoch timestamp in seconds")
+    turnstile_token: Optional[str] = Field(default=None, description="Cloudflare Turnstile token")
 
 class Milestone(BaseModel):
     id: str = Field(..., description="Unique identifier for milestone")

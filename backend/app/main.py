@@ -4,7 +4,7 @@ load_dotenv()
 # [SOLID: SRP] — Main entry point manages HTTP routing, CORS, and WebSocket protocol
 import os
 from typing import List, Optional
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query, HTTPException
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -20,6 +20,7 @@ from app.services.knowledge_service import KnowledgeService
 from app.services.wish_manager import WishManager
 from app.services.ai_service import AIService
 from app.services.tts_service import TTSService
+from app.services.turnstile import verify_turnstile_token
 from fastapi.responses import Response
 
 app = FastAPI(
@@ -74,7 +75,14 @@ async def list_wishes():
     return wish_manager.get_all_wishes()
 
 @app.post("/api/wishes", response_model=StudentWish)
-async def submit_wish(wish: StudentWish):
+async def submit_wish(wish: StudentWish, request: Request):
+    client_ip = request.client.host if request.client else None
+    is_human = await verify_turnstile_token(wish.turnstile_token, remote_ip=client_ip)
+    if not is_human:
+        raise HTTPException(
+            status_code=400,
+            detail="Security verification failed. Please complete the Turnstile challenge."
+        )
     return await wish_manager.add_wish(wish)
 
 @app.post("/api/tribute/generate", response_model=BirthdayTributeResponse)

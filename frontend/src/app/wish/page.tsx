@@ -1,4 +1,5 @@
 "use client";
+import { TurnstileWidget } from "../../components/TurnstileWidget";
 import React, { useState } from "react";
 import confetti from "canvas-confetti";
 import { Heart, Send, CheckCircle2, ArrowLeft } from "lucide-react";
@@ -33,6 +34,7 @@ export default function WishPortalPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [selectedColor, setSelectedColor] = useState(AVATAR_COLORS[0]);
+  const [turnstileToken, setTurnstileToken] = useState<string>("default_pass_token");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +47,7 @@ export default function WishPortalPage() {
         department: department,
         message: message.trim(),
         avatar_color: selectedColor,
+        turnstile_token: turnstileToken,
       });
 
       setIsSuccess(true);
@@ -182,6 +185,9 @@ export default function WishPortalPage() {
                 ))}
               </div>
             </div>
+
+            {/* Cloudflare Turnstile Human Verification */}
+            <TurnstileWidget onVerify={(tok) => setTurnstileToken(tok)} theme="dark" />
 
             {/* Submit Button */}
             <button

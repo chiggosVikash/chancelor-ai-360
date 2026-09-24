@@ -29,6 +29,7 @@ export interface StudentWish {
   message: string;
   timestamp: string;
   avatar_color?: string;
+  turnstile_token?: string;
 }
 
 export interface Milestone {

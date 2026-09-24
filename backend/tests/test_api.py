@@ -40,3 +40,18 @@ async def test_submit_wish_and_retrieve():
         assert get_resp.status_code == 200
         wishes = get_resp.json()
         assert any(w["id"] == "w_api_test" for w in wishes)
+
+@pytest.mark.asyncio
+async def test_submit_wish_with_turnstile_token():
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
+        post_resp = await ac.post("/api/wishes", json={
+            "id": "w_turnstile_test",
+            "student_name": "Test Turnstile User",
+            "department": "CSE",
+            "message": "Greetings Chancellor Sir with Turnstile verification!",
+            "turnstile_token": "test-dummy-token"
+        })
+        assert post_resp.status_code == 200
+        data = post_resp.json()
+        assert data["student_name"] == "Test Turnstile User"
