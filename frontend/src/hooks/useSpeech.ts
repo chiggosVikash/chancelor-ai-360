@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { API_BASE_URL } from "../lib/api";
 
 export function useSpeechRecognition(onResult?: (transcript: string) => void) {
   const [isListening, setIsListening] = useState(false);
@@ -70,25 +71,41 @@ export function useSpeechRecognition(onResult?: (transcript: string) => void) {
 export function useSpeechSynthesis() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isEnabled, setIsEnabled] = useState(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window) || !isEnabled) {
-      return;
+  // Initialize persistent Audio object
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      audioRef.current = new Audio();
+      const a = audioRef.current;
+      a.onended = () => setIsSpeaking(false);
+      a.onerror = () => setIsSpeaking(false);
+      a.onpause = () => setIsSpeaking(false);
     }
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+      }
+    };
+  }, []);
 
+  // Fallback to browser Web Speech API if backend TTS unreachable
+  const fallbackBrowserSpeech = useCallback((text: string) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
-
-    // Clean markdown symbols for cleaner voice
     const cleanText = text.replace(/[*_#`[\]()]/g, "");
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 0.95; // Dignified, calm cadence
-    utterance.pitch = 1.0;
+    utterance.rate = 0.95;
+    utterance.pitch = 1.05;
 
-    // Prefer Indian English or natural voice if available
     const voices = window.speechSynthesis.getVoices();
     const preferredVoice = voices.find(
-      (v) => v.lang.includes("en-IN") || v.lang.includes("hi-IN") || v.name.includes("Google")
-    );
+      (v) =>
+        (v.lang.includes("en-IN") || v.lang.includes("hi-IN") || v.name.includes("Google") || v.name.includes("Natural")) &&
+        (v.name.includes("Female") || v.name.includes("Neerja") || v.name.includes("Sangeeta") || v.name.includes("Samantha"))
+    ) || voices.find((v) => v.lang.includes("en-IN"));
+
     if (preferredVoice) {
       utterance.voice = preferredVoice;
     }
@@ -96,13 +113,46 @@ export function useSpeechSynthesis() {
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
-
     window.speechSynthesis.speak(utterance);
-  }, [isEnabled]);
+  }, []);
+
+  const speak = useCallback(
+    async (text: string) => {
+      if (!isEnabled || !text.trim() || typeof window === "undefined") {
+        return;
+      }
+
+      // Stop any current playback
+      stop();
+
+      try {
+        const audio = audioRef.current;
+        if (!audio) throw new Error("Audio object not ready");
+
+        // Use backend neural voice stream (en-IN-NeerjaNeural female voice)
+        const ttsUrl = `${API_BASE_URL}/api/tts?text=${encodeURIComponent(text.trim())}`;
+        audio.src = ttsUrl;
+        audio.playbackRate = 1.0;
+
+        setIsSpeaking(true);
+        await audio.play();
+      } catch (err) {
+        console.warn("Neural audio streaming failed, using browser speech fallback:", err);
+        fallbackBrowserSpeech(text);
+      }
+    },
+    [isEnabled, fallbackBrowserSpeech]
+  );
 
   const stop = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
+    if (typeof window !== "undefined") {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
       setIsSpeaking(false);
     }
   }, []);

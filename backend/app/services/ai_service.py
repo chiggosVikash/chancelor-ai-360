@@ -88,10 +88,14 @@ Instructions:
                     if resp.status_code == 200:
                         data = resp.json()
                         answer_text = data["choices"][0]["message"]["content"].strip()
-                        citations = [
-                            "Shobhit University Official Archive",
-                            "Office of the Chancellor Records (www.kunwarsv.in)"
-                        ]
+                        matched_m = self.knowledge_service.find_milestones(query=question)
+                        if matched_m and matched_m[0].citations:
+                            citations = matched_m[0].citations
+                        else:
+                            citations = [
+                                "Shobhit University Official Archive",
+                                "Office of the Chancellor Records (www.kunwarsv.in)"
+                            ]
                         followups = [
                             "What was Chancellor Sir's vision when volunteering with NICE in 1989?",
                             "How does the 200-bed Ayurvedic hospital empower rural Western UP?",

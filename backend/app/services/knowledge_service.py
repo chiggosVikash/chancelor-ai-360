@@ -43,23 +43,22 @@ class KnowledgeService:
         return [Milestone(**m) for m in raw_milestones]
 
     def find_milestones(self, query: str = "", category: Optional[str] = None) -> List[Milestone]:
+        import re
         q = query.lower().strip()
-        # Stem common search terms for robust matching
-        normalized_q = q.replace("ayurveda", "ayurved") if "ayurveda" in q else q
+        stop_words = {"tell", "me", "about", "the", "of", "in", "and", "for", "with", "what", "was"}
+        tokens = [w for w in re.findall(r"\w+", q) if len(w) > 2 and w not in stop_words]
         results: List[Milestone] = []
 
         for m_data in self._profile_cache.get("milestones", []):
             milestone = Milestone(**m_data)
 
-            # Check category filter
             if category and category.lower() != "all":
                 if milestone.category.lower() != category.lower():
                     continue
 
-            # Check search match across fields including category
-            if normalized_q:
+            if tokens:
                 searchable_text = f"{milestone.title} {milestone.year} {milestone.summary} {milestone.narrative} {milestone.category}".lower()
-                if normalized_q in searchable_text:
+                if q in searchable_text or any(token in searchable_text for token in tokens):
                     results.append(milestone)
             else:
                 results.append(milestone)

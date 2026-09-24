@@ -19,6 +19,8 @@ from app.models import (
 from app.services.knowledge_service import KnowledgeService
 from app.services.wish_manager import WishManager
 from app.services.ai_service import AIService
+from app.services.tts_service import TTSService
+from fastapi.responses import Response
 
 app = FastAPI(
     title="Chancellor AI 360 API",
@@ -100,3 +102,23 @@ async def websocket_wishes_endpoint(websocket: WebSocket):
         wish_manager.connection_manager.disconnect(websocket)
     except Exception:
         wish_manager.connection_manager.disconnect(websocket)
+
+@app.get("/api/tts")
+async def stream_tts_audio_get(text: str = Query(..., min_length=1), voice: Optional[str] = None):
+    try:
+        audio_bytes = await TTSService.get_audio_bytes(text, voice)
+        return Response(content=audio_bytes, media_type="audio/mpeg")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"TTS error: {str(e)}")
+
+@app.post("/api/tts")
+async def stream_tts_audio_post(body: dict):
+    text = body.get("text", "").strip()
+    voice = body.get("voice")
+    if not text:
+        raise HTTPException(status_code=400, detail="Text is required")
+    try:
+        audio_bytes = await TTSService.get_audio_bytes(text, voice)
+        return Response(content=audio_bytes, media_type="audio/mpeg")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"TTS error: {str(e)}")
