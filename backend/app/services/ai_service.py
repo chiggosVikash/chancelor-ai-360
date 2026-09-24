@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 # [PATTERN: Strategy / Adapter] — Wraps OpenRouter & Gemini API with deterministic fallback for stage resilience
 # [SOLID: SRP] — Orchestrates Q&A intelligence and birthday poetic synthesis
 import os
@@ -64,7 +66,7 @@ Instructions:
             try:
                 headers = {
                     "Authorization": f"Bearer {self.openrouter_api_key}",
-                    "HTTP-Referer": "https://shobhituniversity.ac.in",
+                    "HTTP-Referer": "https://kunwarsv.in",
                     "X-Title": "Chancellor AI 360",
                     "Content-Type": "application/json"
                 }

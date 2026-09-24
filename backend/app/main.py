@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 # [SOLID: DIP] — FastAPI app wires dependencies into route handlers
 # [SOLID: SRP] — Main entry point manages HTTP routing, CORS, and WebSocket protocol
 import os
