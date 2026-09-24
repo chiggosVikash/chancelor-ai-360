@@ -1,0 +1,112 @@
+{
+  "name": "Kunwar Shekhar Vijendra",
+  "title": "Co-Founder & Hon'ble Chancellor, Shobhit University",
+  "institutions": [
+    "Shobhit Institute of Engineering & Technology (Deemed to-be-University, Meerut)",
+    "Shobhit University, Gangoh (Saharanpur, UP)",
+    "NICE Society (Est. 1989)",
+    "Shobhit Ayurvedic Medical College & Hospital"
+  ],
+  "biography": "Kunwar Shekhar Vijendra is a distinguished Indian educationist, philanthropist, and social reformer. As the Chancellor of Shobhit University and Chairman of NICE Society, he has dedicated over three decades to transforming higher education in India. Born with a deep commitment to societal development, he championed the democratization of technical, biological, and medical education in rural and semi-urban India, creating world-class opportunities for thousands of first-generation learners.",
+  "core_pillars": [
+    {
+      "title": "Empowering Nation Through Education",
+      "description": "Firm belief that accessible, value-based education is the primary driver of national prosperity and individual empowerment."
+    },
+    {
+      "title": "Convergence of Ancient Wisdom & Modern Technology",
+      "description": "Pioneering the synergy between traditional Indian sciences (Ayurveda, Naturopathy, Yogic sciences) and cutting-edge technologies (Biotechnology, Artificial Intelligence, Agricultural Informatics)."
+    },
+    {
+      "title": "Rural Youth Empowerment & Affordable Healthcare",
+      "description": "Establishing premier institutions and a 100-bed charitable Ayurvedic research hospital in rural Western UP to serve underprivileged communities."
+    },
+    {
+      "title": "Global Goodwill & Academic Diplomacy",
+      "description": "Fostering international academic collaborations, youth forums with UN/UNESCO, and representing Indian higher education globally."
+    }
+  ],
+  "leadership_roles": [
+    "Co-Founder & Chancellor, Shobhit University (Meerut & Gangoh)",
+    "Chairman, National Institute of Computer Education (NICE) Society",
+    "Chairman, ASSOCHAM National Council on Education",
+    "Advisor & Patron to numerous educational trusts and social welfare bodies in India and abroad"
+  ],
+  "quotes": [
+    "Education must not merely prepare students for a living; it must prepare them for life, grounding them in ethics, compassion, and innovation.",
+    "True nation-building happens when world-class knowledge reaches the doorsteps of rural youth.",
+    "Ancient Indian wisdom and modern technology are not conflicting paths; they are two wings of the same bird of progress."
+  ],
+  "milestones": [
+    {
+      "id": "m_1989",
+      "year": "1989",
+      "title": "Founding of NICE Society",
+      "category": "Education",
+      "summary": "Pioneered community computer literacy and vocational training across North India.",
+      "narrative": "In 1989, recognizing the imminent digital revolution, Kunwar Shekhar Vijendra founded the National Institute of Computer Education (NICE) Society. The initiative democratized computer literacy at a time when technology education was restricted to metropolitan centers.",
+      "photos": ["/photos/1989_nice_society.jpg"],
+      "citations": ["NICE Society Foundation Charter 1989", "Shobhit University Archive Reg. 01"]
+    },
+    {
+      "id": "m_2000",
+      "year": "2000",
+      "title": "Establishment of SIET Meerut",
+      "category": "Education",
+      "summary": "Established Shobhit Institute of Engineering & Technology, Meerut.",
+      "narrative": "To bridge the critical gap in technical and engineering talent in Uttar Pradesh, Kunwar Shekhar Vijendra established SIET in Meerut, featuring state-of-the-art laboratories in computer engineering, electronics, and biomedical disciplines.",
+      "photos": ["/photos/2000_siet_meerut.jpg"],
+      "citations": ["AICTE Approval Notification F.720-67-248/RC/94", "SIET Foundation Records"]
+    },
+    {
+      "id": "m_2006",
+      "year": "2006",
+      "title": "Conferred Deemed-to-be-University Status",
+      "category": "Education",
+      "summary": "Recognized by Government of India Ministry of HRD under Section 3 of UGC Act.",
+      "narrative": "In recognition of outstanding academic standards, research in biotechnology, and state-of-the-art infrastructure, the Central Government conferred Deemed-to-be-University status upon SIET Meerut, establishing Shobhit University.",
+      "photos": ["/photos/2006_deemed_university.jpg"],
+      "citations": ["MHRD Notification No. F.9-37/2004-U.3", "The Gazette of India 2006"]
+    },
+    {
+      "id": "m_2012",
+      "year": "2012",
+      "title": "Establishment of Shobhit University, Gangoh",
+      "category": "Youth Welfare",
+      "summary": "Founded second university campus in rural Gangoh, Saharanpur.",
+      "narrative": "Demonstrating unyielding commitment to rural youth upliftment, Chancellor Kunwar Shekhar Vijendra established Shobhit University at Gangoh under Uttar Pradesh State Act No. 3 of 2012, bringing world-class higher education to rural western UP.",
+      "photos": ["/photos/2012_gangoh_campus.jpg"],
+      "citations": ["UP State Act No. 3 of 2012", "UGC Section 2(f) Notification"]
+    },
+    {
+      "id": "m_2014",
+      "year": "2014",
+      "title": "Shobhit Ayurvedic Medical College & Hospital",
+      "category": "Healthcare & Ayurveda",
+      "summary": "Inauguration of a 100-bed hospital and research center for traditional medicine.",
+      "narrative": "Driven by his philosophy of holistic healthcare, he established Shobhit Ayurvedic Medical College & Hospital in Gangoh, combining ancient Ayurvedic healing with modern diagnostic facilities and providing heavily subsidized healthcare to rural families.",
+      "photos": ["/photos/2014_ayurveda_hospital.jpg"],
+      "citations": ["NCISM Approval Guidelines", "Ministry of AYUSH Healthcare Gazette"]
+    },
+    {
+      "id": "m_2018",
+      "year": "2018",
+      "title": "Chairman of ASSOCHAM National Education Council",
+      "category": "Global Leadership",
+      "summary": "Leading national dialogue on higher education policy reforms and industry integration.",
+      "narrative": "Appointed as Chairman of ASSOCHAM's National Council on Education, Chancellor Vijendra represented Indian universities at apex policy forums, championing industry-academia synergy, skill-based curricula, and equitable access for student innovators.",
+      "photos": ["/photos/2018_assocham_leadership.jpg"],
+      "citations": ["ASSOCHAM National Summit Proceedings 2018", "National Council Directives"]
+    },
+    {
+      "id": "m_2022",
+      "year": "2022",
+      "title": "AI & Biotechnology Centers of Excellence",
+      "category": "Education",
+      "summary": "Advanced research centers launched in bioinformatics, AI, and smart agriculture.",
+      "narrative": "Inaugurated dedicated research clusters at Shobhit University focused on applying Artificial Intelligence and genomics to solve regional agricultural and environmental challenges.",
+      "photos": ["/photos/2022_ai_biotech.jpg"],
+      "citations": ["Shobhit University Research Annual Report 2022"]
+    }
+  ]
+}
