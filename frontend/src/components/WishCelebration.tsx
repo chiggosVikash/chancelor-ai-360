@@ -47,9 +47,16 @@ export const WishCelebration: React.FC<WishCelebrationProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // 30-Second Live Window State
+  // 2-Minute Live Window State
+  const TOTAL_WINDOW_SECONDS = 120;
   const [isCountdownActive, setIsCountdownActive] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(30);
+  const [secondsLeft, setSecondsLeft] = useState(120);
+
+  const formatTime = (totalSeconds: number) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins}:${secs < 10 ? `0${secs}` : secs}`;
+  };
   const [windowStartTime, setWindowStartTime] = useState<number | null>(null);
   const [windowWishCount, setWindowWishCount] = useState(0);
 
@@ -157,12 +164,12 @@ export const WishCelebration: React.FC<WishCelebrationProps> = ({
   }, [isCountdownActive, executePoemGeneration]);
 
   // Launch the 30-second countdown window
-  const handleStart30sWindow = () => {
+  const handleStartWindow = () => {
     stop();
     const nowEpoch = Date.now() / 1000;
     setWindowStartTime(nowEpoch);
     setWindowWishCount(0);
-    setSecondsLeft(30);
+    setSecondsLeft(TOTAL_WINDOW_SECONDS);
     setIsCountdownActive(true);
 
     confetti({
@@ -253,7 +260,7 @@ export const WishCelebration: React.FC<WishCelebrationProps> = ({
               <span>Real-Time Collective Tapestry</span>
             </div>
             <h2 className="font-display font-medium text-3xl sm:text-4xl text-[#1A1614]">
-              Birthday Tributes &amp; Wishes
+              Melodious Birthday Wishes...
             </h2>
             <p className="text-sm text-[#8B7B6F] font-ui max-w-xl">
               Every wish submitted by students, alumni, and faculty joins the live tribute constellation, preserved in real time.
@@ -270,20 +277,20 @@ export const WishCelebration: React.FC<WishCelebrationProps> = ({
               <span>Stage QR Code</span>
             </button>
 
-            {/* Launch 30s Wish Storm Button */}
+            {/* Launch 2-Min Wish Storm Button */}
             {!isCountdownActive ? (
               <button
-                onClick={handleStart30sWindow}
+                onClick={handleStartWindow}
                 disabled={isGeneratingPoem}
                 className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#B8862C] to-[#996D1E] hover:from-[#996D1E] hover:to-[#B8862C] text-white text-xs font-semibold font-ui shadow-md transition-all active:scale-95 disabled:opacity-50"
               >
                 <Zap className="w-4 h-4 text-white animate-pulse" />
-                <span>Launch 30s Live Wish Storm</span>
+                <span>Launch 2-Min Live Wish Storm</span>
               </button>
             ) : (
               <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-[#1E2D5A] text-white text-xs font-mono font-semibold shadow-md animate-pulse">
                 <Radio className="w-4 h-4 text-[#B8862C] animate-ping" />
-                <span>Storm Active: 00:{secondsLeft < 10 ? `0${secondsLeft}` : secondsLeft}</span>
+                <span>Storm Active: {formatTime(secondsLeft)}</span>
               </div>
             )}
 
@@ -313,26 +320,26 @@ export const WishCelebration: React.FC<WishCelebrationProps> = ({
                   className="h-full bg-[#B8862C]"
                   initial={{ width: "100%" }}
                   animate={{ width: "0%" }}
-                  transition={{ duration: 30, ease: "linear" }}
+                  transition={{ duration: TOTAL_WINDOW_SECONDS, ease: "linear" }}
                 />
               </div>
 
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-center space-x-5">
                   <div className="w-16 h-16 rounded-2xl bg-[#1E2D5A] text-[#D4A84B] flex flex-col items-center justify-center font-mono font-bold shadow-inner">
-                    <span className="text-2xl leading-none">{secondsLeft}</span>
-                    <span className="text-[10px] tracking-wider uppercase text-white/80">SEC</span>
+                    <span className="text-xl sm:text-2xl leading-none">{formatTime(secondsLeft)}</span>
+                    <span className="text-[10px] tracking-wider uppercase text-white/80">REMAINING</span>
                   </div>
                   <div className="space-y-1">
                     <div className="inline-flex items-center space-x-1.5 text-xs font-bold text-[#B8862C] font-mono tracking-wider uppercase">
                       <Zap className="w-3.5 h-3.5 text-[#B8862C]" />
-                      <span>Live 30-Second Stage Storm In Progress</span>
+                      <span>Live 2-Minute Stage Storm In Progress</span>
                     </div>
                     <h3 className="font-display text-xl sm:text-2xl font-bold text-[#1A1614]">
                       Scan QR or Submit Now — Weaving Wishes into the Birthday Ode!
                     </h3>
                     <p className="text-xs text-[#8B7B6F] font-ui">
-                      When this timer hits zero, AI will synthesize all audience wishes into a live commemorative anthem.
+                      When this 2-minute countdown ends, AI will synthesize all audience wishes into a live commemorative anthem.
                     </p>
                   </div>
                 </div>
