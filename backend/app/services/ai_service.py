@@ -1,23 +1,30 @@
-# [PATTERN: Strategy / Adapter] — Wraps Gemini API with deterministic fallback for stage resilience
+# [PATTERN: Strategy / Adapter] — Wraps OpenRouter & Gemini API with deterministic fallback for stage resilience
 # [SOLID: SRP] — Orchestrates Q&A intelligence and birthday poetic synthesis
 import os
 import json
+import logging
 from typing import List, Dict, Any, Optional
+import httpx
 from app.models import ChatResponse, StudentWish, BirthdayTributeResponse
 from app.services.knowledge_service import KnowledgeService
+
+logger = logging.getLogger("chancellor_ai.ai_service")
 
 class AIService:
     def __init__(self, knowledge_service: Optional[KnowledgeService] = None):
         self.knowledge_service = knowledge_service or KnowledgeService()
-        self.api_key = os.getenv("GEMINI_API_KEY")
+        self.openrouter_api_key = os.getenv("OPENROUTER_API_KEY", "").strip()
+        self.openrouter_model = os.getenv("OPENROUTER_MODEL", "google/gemini-2.5-flash-lite").strip()
+        self.gemini_api_key = os.getenv("GEMINI_API_KEY", "").strip()
         self._genai_client = None
 
-        if self.api_key:
+        # Optional Direct Gemini fallback if key is provided
+        if self.gemini_api_key:
             try:
                 from google import genai
-                self._genai_client = genai.Client(api_key=self.api_key)
+                self._genai_client = genai.Client(api_key=self.gemini_api_key)
             except Exception as e:
-                # Fallback to local deterministic AI engine if SDK init fails
+                logger.warning(f"Google GenAI SDK init skipped: {e}")
                 self._genai_client = None
 
     def _build_system_context(self) -> str:
@@ -42,40 +49,84 @@ Documented Historical Milestones:
         context += """
 Instructions:
 1. Always maintain a warm, inspiring, and deeply respectful tone honoring the Chancellor.
-2. Highlight his authentic facets: a passionate Gandhian, philanthropist, educational pioneer from Gangoh, Chairman of ASSOCHAM National Council on Education, and compiler of 'Quotes I Quote' (365 quotes).
-3. Emphasize his work in rural youth empowerment, the 200-bed charitable Ayurvedic research hospital in Western UP, Harijan Sevak Sangh, SPIC MACAY, and inclusive sports for Divyang (specially-abled) athletes.
-4. When answering questions, cite official university archives, government charters, or research records.
+2. Adapt seamlessly to the user's language: respond in fluent English or respectful Hindi matching the inquiry.
+3. Keep answers concise (<150 words) suitable for live spoken recitation on stage.
+4. Highlight authentic verified facts: Gangoh origin, NICE Society 1989 volunteer origin, 200-bed charitable Ayurvedic hospital, Gandhian ethics (Harijan Sevak Sangh, SPIC MACAY), ASSOCHAM National Council on Education, and 'Quotes I Quote'.
+5. Always ground responses in official university records, government charters, or archival citations.
 """
         return context
 
     async def answer_question(self, question: str, include_citations: bool = True) -> ChatResponse:
         q_lower = question.lower()
 
-        # 1. Try Gemini Live API if client is available
+        # ─── Priority 1: OpenRouter (Gemini 2.5 Flash Lite) ───────────────────
+        if self.openrouter_api_key:
+            try:
+                headers = {
+                    "Authorization": f"Bearer {self.openrouter_api_key}",
+                    "HTTP-Referer": "https://shobhituniversity.ac.in",
+                    "X-Title": "Chancellor AI 360",
+                    "Content-Type": "application/json"
+                }
+                payload = {
+                    "model": self.openrouter_model,
+                    "messages": [
+                        {"role": "system", "content": self._build_system_context()},
+                        {"role": "user", "content": question}
+                    ],
+                    "temperature": 0.35,
+                    "max_tokens": 400
+                }
+                async with httpx.AsyncClient(timeout=4.0) as client:
+                    resp = await client.post(
+                        "https://openrouter.ai/api/v1/chat/completions",
+                        headers=headers,
+                        json=payload
+                    )
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        answer_text = data["choices"][0]["message"]["content"].strip()
+                        citations = [
+                            "Shobhit University Official Archive",
+                            "Office of the Chancellor Records (www.kunwarsv.in)"
+                        ]
+                        followups = [
+                            "What was Chancellor Sir's vision when volunteering with NICE in 1989?",
+                            "How does the 200-bed Ayurvedic hospital empower rural Western UP?",
+                            "Tell me about his Gandhian philosophy and 'Quotes I Quote'."
+                        ]
+                        return ChatResponse(
+                            answer=answer_text,
+                            citations=citations,
+                            suggested_followups=followups
+                        )
+                    else:
+                        logger.warning(f"OpenRouter non-200: {resp.status_code} - {resp.text}")
+            except Exception as e:
+                logger.warning(f"OpenRouter call failed or timed out: {e}. Falling back to stage engine.")
+
+        # ─── Priority 2: Direct Google GenAI SDK (if configured) ─────────────
         if self._genai_client:
             try:
-                prompt = f"{self._build_system_context()}\n\nUser Question: {question}\n\nAnswer concisely with high reverence (2-3 paragraphs max) and list 1-2 verified citations."
+                prompt = f"{self._build_system_context()}\n\nUser Question: {question}\n\nAnswer concisely with high reverence and list verified citations."
                 response = self._genai_client.models.generate_content(
                     model="gemini-2.5-flash",
                     contents=prompt,
                 )
                 answer_text = response.text or ""
-                citations = ["Shobhit University Official Archive", "Office of the Chancellor Records (www.kunwarsv.in)"]
-                followups = [
-                    "What was Chancellor Sir's vision when volunteering with NICE in 1989?",
-                    "How does the 200-bed Ayurvedic hospital empower rural Western UP?",
-                    "Tell me about his Gandhian philosophy and 'Quotes I Quote'."
-                ]
                 return ChatResponse(
                     answer=answer_text,
-                    citations=citations,
-                    suggested_followups=followups
+                    citations=["Shobhit University Official Archive", "Office of the Chancellor Records"],
+                    suggested_followups=[
+                        "What was Chancellor Sir's vision when founding NICE in 1989?",
+                        "How does Shobhit University integrate Ayurveda with modern biotechnology?",
+                        "Tell us about his initiatives for rural youth empowerment."
+                    ]
                 )
-            except Exception:
-                # Seamless fallback to deterministic engine
-                pass
+            except Exception as e:
+                logger.warning(f"Direct Gemini SDK failed: {e}. Falling back to stage engine.")
 
-        # 2. High-Reliability Local Stage Engine (Deterministic Fallback)
+        # ─── Priority 3: High-Reliability Local Stage Engine (Deterministic Fallback) ─
         milestones = self.knowledge_service.find_milestones(query=question)
         overview = self.knowledge_service.get_chancellor_overview()
 
@@ -121,7 +172,7 @@ Instructions:
             m_ayur = self.knowledge_service.get_milestone_by_year("2018")
             return ChatResponse(
                 answer="Hailing from Gangoh in Saharanpur district, Kunwar Shekhar Vijendra has championed the healthcare needs of rural Western Uttar Pradesh. Under his visionary guidance, the trust established the KSV Ayurved Medical College, Hospital and Research Centre, along with the Centre for Naturopathy and Yogic Sciences. It features a 200-bed charitable hospital offering advanced Ayurvedic treatments, maternal care, and subsidized healthcare to thousands of underprivileged villagers.",
-                citations=m_ayur.citations if m_ayur else ["Ministry of AYUSH Records", "UP State Health Registry"],
+                citations=m_ayur.citations if m_ayur else ["Ministry of AYUSH Guidelines", "Charitable Medical Registry 2018"],
                 suggested_followups=[
                     "Tell me about Shobhit University Gangoh Charter in 2012.",
                     "What agricultural conferences has he inaugurated?",
@@ -183,6 +234,49 @@ Instructions:
     ) -> BirthdayTributeResponse:
         active_wishes = wishes if wishes is not None else (recent_wishes or [])
         count = len(active_wishes) if active_wishes else 24
+
+        # Try OpenRouter for dynamic poem synthesis if key is present
+        if self.openrouter_api_key:
+            try:
+                sample_wishes = [w.message for w in active_wishes[:10]]
+                prompt = (
+                    "Write an inspiring 4-stanza Birthday Tribute Poem for Kunwar Shekhar Vijendra, "
+                    "Chancellor of Shobhit University. Stanza 1 & 2 must honor his roots in Gangoh, Western UP, "
+                    "founding NICE Society in 1989, and establishing the 200-bed Ayurvedic hospital. "
+                    f"Stanza 3 & 4 must incorporate heartfelt gratitude from student greetings: {json.dumps(sample_wishes)}. "
+                    "Return ONLY the 4 stanzas separated by double newlines."
+                )
+                headers = {
+                    "Authorization": f"Bearer {self.openrouter_api_key}",
+                    "HTTP-Referer": "https://shobhituniversity.ac.in",
+                    "X-Title": "Chancellor AI 360",
+                    "Content-Type": "application/json"
+                }
+                async with httpx.AsyncClient(timeout=5.0) as client:
+                    resp = await client.post(
+                        "https://openrouter.ai/api/v1/chat/completions",
+                        headers=headers,
+                        json={
+                            "model": self.openrouter_model,
+                            "messages": [{"role": "user", "content": prompt}],
+                            "temperature": 0.6,
+                            "max_tokens": 500
+                        }
+                    )
+                    if resp.status_code == 200:
+                        text = resp.json()["choices"][0]["message"]["content"].strip()
+                        stanzas = [s.strip() for s in text.split("\n\n") if s.strip()]
+                        if len(stanzas) >= 3:
+                            recitation = " ".join(stanzas[:2])
+                            return BirthdayTributeResponse(
+                                title="A Living Legacy: Birthday Ode to Kunwar Shekhar Vijendra",
+                                theme="Gandhian Leadership, 35 Years of Educational Pioneering & Rural Transformation",
+                                poem_stanzas=stanzas,
+                                recitation_text=recitation,
+                                total_wishes_synthesized=count
+                            )
+            except Exception as e:
+                logger.warning(f"OpenRouter poem generation failed: {e}. Using deterministic poem.")
 
         stanzas = [
             "From Gangoh's soil to Meerut's campus wide,\nSince eighty-nine, you walked with truth as guide.\nWith NICE you sparked a digital sunrise,\nWhere village youth could reach into the skies.",
